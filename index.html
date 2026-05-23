@@ -55,7 +55,7 @@
         .btn-success { background: #16a34a; color: #fff; }
         .btn-success:hover { background: #15803d; }
 
-        /* 拖拽和文件上传区 */
+        /* 拖拽区 */
         .drop-zone {
             border: 2px dashed var(--border); border-radius: 10px; padding: 20px; text-align: center;
             color: var(--t3); cursor: pointer; transition: all .3s; position: relative;
@@ -63,7 +63,7 @@
         .drop-zone:hover, .drop-zone.dragover { border-color: var(--accent); background: var(--accent-glow); color: var(--t2); }
         .drop-zone.has-file { border-color: var(--green); border-style: solid; background: rgba(74,222,128,.04); color: var(--green); }
 
-        /* 标签导航 */
+        /* Tab */
         .tab-bar { display: flex; border-bottom: 1px solid var(--border); margin: -28px -28px 20px; padding: 0 28px; overflow-x: auto; }
         .tab-btn {
             padding: 14px 20px; background: none; border: none; color: var(--t3); font-size: 14px; font-weight: 500;
@@ -85,11 +85,14 @@
         .cmp-group { margin-bottom: 14px; }
         .cmp-hd { display: flex; align-items: center; gap: 10px; padding: 11px 16px; background: var(--s2); border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background .2s; user-select: none; }
         .cmp-hd:hover { background: var(--s3); }
-        .cmp-hd .chevron { transition: transform .2s; font-size: 12px; color: var(--t3); transition: transform 0.2s; }
+        .cmp-hd .chevron { transition: transform 0.2s ease; font-size: 12px; color: var(--t3); }
         .cmp-hd.open .chevron { transform: rotate(90deg); }
         .cmp-badge { font-size: 11px; padding: 2px 9px; border-radius: 10px; font-weight: 700; }
-        .cmp-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
-        .cmp-body.open { max-height: 5000px; overflow-y: auto; }
+        
+        /* 核心视觉修复点：彻底移除外层残余小滚动条，改用完全平滑折叠过渡 */
+        .cmp-body { max-height: 0; overflow: hidden; transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .cmp-body.open { max-height: 5000px; }
+        
         .cmp-item { display: flex; align-items: flex-start; padding: 12px 16px; gap: 12px; border-bottom: 1px solid rgba(255,255,255,.02); font-size: 13px; flex-wrap: wrap; }
         .cmp-item:hover { background: rgba(255,255,255,.015); }
         .sim-tag { font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 700; white-space: nowrap; }
@@ -103,7 +106,7 @@
         .stat-val { font-size: 30px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
         .stat-lbl { font-size: 12px; color: var(--t3); font-weight: 500; }
 
-        .preview-box { max-height: 520px; overflow-y: auto; padding-right: 6px; }
+        .preview-box { max-height: 550px; overflow-y: auto; padding-right: 6px; }
         .folder-hd { font-weight: 700; color: var(--accent); margin: 14px 0 4px; padding: 5px 10px; background: rgba(232,168,56,.07); border-radius: 5px; display: inline-block; }
         .subfolder-hd { font-weight: 600; color: var(--blue); margin: 8px 0 2px 22px; font-size: 13px; }
         .bm-row { margin-left: 44px; padding: 6px 12px; border-bottom: 1px solid rgba(255,255,255,.025); font-size: 13px; display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; transition: background 0.15s; }
@@ -148,8 +151,9 @@
             <i class="fas fa-circle-exclamation text-xl mt-0.5 text-amber-400"></i>
             <div class="text-xs text-amber-200/80 space-y-1">
                 <p class="font-bold text-amber-300 text-sm">💡 数据归档与无感局部更新系统</p>
-                <p>1. <strong>局部刷新机制（不丢内容）</strong>：修死链、删书签无需重新载入网页。点击专属更新按钮，系统会直接重新渲染变化并同步更新至导出文件包。</p>
-                <p>2. <strong>智能批量回溯</strong>：【可疑链接】面板现已支持【⚡ 批量全自动修复】，遇到能够精准在旧历史库对齐的重名项时会秒级自动恢复。</p>
+                <p>1. <strong>环境对齐完毕</strong>：代码全面重构兼容 GitHub Pages 运行环境，不再有本地权限静默拦截报错。</p>
+                <p>2. <strong>极简折叠布局</strong>：【对比结果】内的所有子数据组默认完全收缩闭合。右侧残留的多余小滚动条已彻底移除。</p>
+                <p>3. <strong>可疑链接工作台</strong>：支持全自动一键追溯、人工选定或手动补齐新 URL，复活后全量刷新比对面板。</p>
             </div>
         </header>
 
@@ -295,7 +299,7 @@ let deadBookmarks = [];
 
 let rawComparisonCache = { matched: [], onlyInNew: [], onlyInOld: [] };
 
-/* ========== 核心文本逻辑与字符编码算法 ========== */
+/* ========== 核心算法与特征指纹计算 ========== */
 function escapeHtml(text) {
     if (!text) return "";
     return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
@@ -458,34 +462,10 @@ function regenerateHtmlAndPanels() {
     renderSuspiciousPanel();
 }
 
-/* ========== 文件装载管理 ========== */
-function handleSrcFile(input) {
-    const file = input.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        document.getElementById('rawTextArea').value = e.target.result;
-        showToast(`成功导入并载入待处理文件: ${file.name}`);
-    };
-    reader.readAsText(file, 'UTF-8');
-}
-
-function handleOldHtmlFile(input) {
-    const file = input.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        oldBookmarkList = parseBookmarkHtml(e.target.result);
-        showToast(`成功旧备份，读取历史超链接数： ${oldBookmarkList.length}`);
-        if (processedBookmarks.length > 0) runOptimizedComparison();
-    };
-    reader.readAsText(file, 'UTF-8');
-}
-
 function processData() {
     const raw = document.getElementById('rawTextArea').value;
     if (!raw.trim()) {
-        showToast("装载区文本流为空，请先复制或传入数据", "warning");
+        showToast("装载缓冲区空虚，请先复制或传入数据", "warning");
         return;
     }
 
@@ -685,7 +665,7 @@ function filterComparisonView() {
     });
 
     rawComparisonCache.onlyInNew.forEach(nb => {
-        const isTextMatch = !keyword || nb.title.toLowerCase().includes(keyword) || nb.url.toLowerCase().includes(keyword);
+        const_isTextMatch = !keyword || nb.title.toLowerCase().includes(keyword) || nb.url.toLowerCase().includes(keyword);
         if (isTextMatch) finalOnlyInNew.push(nb);
     });
 
@@ -697,10 +677,11 @@ function filterComparisonView() {
     renderComparisonHTML(finalMatched, finalOnlyInNew, finalOnlyInOld);
 }
 
+// 渲染对比结果：修正所有大组初始状态，实现默认完全收缩
 function renderComparisonHTML(matched, onlyInNew, onlyInOld) {
     let html = `<div class="scroll-y space-y-4">`;
 
-    // 1. 双向配对区
+    // 1. 双向配对面板
     html += `
         <div class="cmp-group">
             <div class="cmp-hd" onclick="toggleGroup(this)">
@@ -972,14 +953,12 @@ function executeBatchSuspiciousLookup() {
     showToast("交叉回溯对齐跑批完毕！", "success");
 }
 
-// 【新引入绝招】⚡ 自动扫描所有可疑残缺项，提取概率最高的最优解自动一键原地复活并同步刷新
+// ⚡ 自动扫描所有可疑残缺项，自动复活并同步刷新
 function executeBatchAutoFixSuspicious() {
     if(oldBookmarkList.length === 0) return showToast("全自动批量修复失败！请在右上方先导入旧备份 HTML 档案", "error");
     if(suspiciousBookmarks.length === 0) return showToast("当前无可疑书签需要修复", "warning");
 
     let fixSuccessCount = 0;
-    
-    // 建立快照副本进行防锁死自删循环
     const tempSuspicious = [...suspiciousBookmarks];
 
     tempSuspicious.forEach(sb => {
@@ -992,12 +971,10 @@ function executeBatchAutoFixSuspicious() {
             if (score >= 0.4) matches.push({ url: ob.url, score });
         });
 
-        // 只要撞中解，直接取相似度最高的唯一最优网址
         if (matches.length > 0) {
             matches.sort((a, b) => b.score - a.score);
             const bestUrl = matches[0].url;
 
-            // 原地执行数据节点改装
             const target = processedBookmarks.find(b => b.id === sb.id);
             if (target) {
                 target.url = bestUrl;
@@ -1010,17 +987,12 @@ function executeBatchAutoFixSuspicious() {
     });
 
     if(fixSuccessCount > 0) {
-        // 全量洗牌内存池过滤掉已经修复完的条目
         suspiciousBookmarks = processedBookmarks.filter(b => b.isSuspicious);
-        
-        // 1. 无感重新打包并同步最新的树和Netscape文件包
         regenerateHtmlAndPanels();
-        // 2. 核心功能联动：让交叉差异引擎重新跑一遍，把缺失数字降低
         runOptimizedComparison();
-        
-        showToast(`⚡ 智能核算大获成功！已自动帮您一键秒级复活了 ${fixSuccessCount} 个残缺断链！新库和比对视图已全量刷新。`, "success");
+        showToast(`⚡ 一键批量自动修复了 ${fixSuccessCount} 个残缺断链！比对视图已刷新。`, "success");
     } else {
-        showToast("未能检测出具有高确信度的完美同名历史备份，建议您查阅下方面板进行人工手动补齐网址。", "warning");
+        showToast("未能检测出具有高确信度的历史备份，建议人工补齐。", "warning");
         renderSuspiciousPanel();
     }
 }
@@ -1047,10 +1019,10 @@ function commitFixSuspiciousLink(uid, type) {
 
     regenerateHtmlAndPanels();
     if (oldBookmarkList.length > 0) runOptimizedComparison();
-    showToast("节点填入修复成功！全栈比对视图已局部单向刷新。", "success");
+    showToast("节点填入修复成功！全栈比对视图已刷新。", "success");
 }
 
-/* ========== 【局部刷新无感抗错机制】分类预览编排 ========== */
+/* ========== 分类预览视图编排 ========== */
 function renderPreview(categoryMap) {
     let html = "";
     for (const [cat, subs] of Object.entries(categoryMap)) {
@@ -1183,7 +1155,7 @@ async function startDeadLinkCheck() {
     const barFill = document.getElementById("progressBarFill");
     
     btn.disabled = true; progressText.classList.remove("hidden"); barContainer.classList.remove("hidden");
-    document.getElementById("deadlinksListPanel").innerHTML = '<div class="empty text-sky-400"><i class="fas fa-circle-notch fa-spin"></i><p>连通性多路复用探针测算中...</p></div>';
+    document.getElementById("deadlinksListPanel").innerHTML = '<div class="empty text-sky-400"><i class="fas fa-circle-notch fa-spin"></i><p>连通性多路复用轻量探测探针加载中...</p></div>';
     
     deadBookmarks = [];
     let total = processedBookmarks.length, checkedCount = 0, batchSize = 10;
@@ -1202,17 +1174,17 @@ async function startDeadLinkCheck() {
                 clearTimeout(timeoutId); checkedCount++;
                 let pct = Math.round((checkedCount / total) * 100);
                 barFill.style.width = pct + "%";
-                progressText.textContent = `嗅探进度: ${checkedCount}/${total} (${pct}%) - 已抓获死链: ${deadBookmarks.length}`;
+                progressText.textContent = `探测进度: ${checkedCount}/${total} (${pct}%) - 已抓获死链: ${deadBookmarks.length}`;
             }
         }));
     }
-    progressText.textContent = `探测结束！扫描总数: ${total}，成功清理死链 ${deadBookmarks.length} 条`;
+    progressText.textContent = `全量探测结束！共扫描 ${total} 条站点，抓获死链 ${deadBookmarks.length} 条`;
     btn.textContent = "重新探测测活"; btn.disabled = false;
     renderDeadlinksView();
 }
 
 function deleteFromActiveBookmarks(url) {
-    if (!confirm("确定要将此网络超时/故障的僵尸节点从合并集合中彻底删除移除吗？")) return;
+    if (!confirm("确定要将此故障死链从合并集合中彻底删除移除吗？")) return;
     processedBookmarks = processedBookmarks.filter(b => b.url !== url);
     deadBookmarks = deadBookmarks.filter(b => b.url !== url);
     suspiciousBookmarks = suspiciousBookmarks.filter(b => b.url !== url);
@@ -1227,9 +1199,9 @@ function renderDeadlinksView() {
     const badge = document.getElementById("deadlinksBadge");
     badge.textContent = deadBookmarks.length; badge.style.display = deadBookmarks.length > 0 ? "" : "none";
     if (deadBookmarks.length === 0) {
-        listPanel.innerHTML = '<div class="empty text-emerald-400"><i class="fas fa-circle-check"></i><p>优秀！未扫描出建立物理连接超时的故障死链</p></div>';
+        listPanel.innerHTML = '<div class="empty text-emerald-400"><i class="fas fa-circle-check"></i><p>优秀！未扫描出连接故障的死链</p></div>';
     } else {
-        let html = '<div class="mb-2 text-xs text-rose-400"><i class="fas fa-circle-exclamation mr-1"></i>以下节点通信失败或线路上无法建立物理握手：</div>';
+        let html = '<div class="mb-2 text-xs text-rose-400"><i class="fas fa-circle-exclamation mr-1"></i>以下节点通信失败或建立连接超时：</div>';
         deadBookmarks.forEach((db, idx) => {
             html += `<div class="list-row border-l-2 border-rose-500 bg-rose-950/10 py-2"><span class="text-zinc-600 text-xs min-w-[20px]">${idx+1}</span><div class="flex-1 min-w-0"><div class="font-bold text-zinc-300 text-xs truncate">${escapeHtml(db.title)}</div><span class="list-url text-rose-400 text-xs select-all block truncate">${escapeHtml(db.url)}</span></div><div class="flex items-center gap-2"><span class="text-xs px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 whitespace-nowrap">通信超时</span><button class="edit-btn edit-btn-remove px-2 py-1 text-xs whitespace-nowrap" onclick="deleteFromActiveBookmarks('${escapeHtml(db.url)}')"><i class="fas fa-trash-can"></i> 删除</button></div></div>`;
         });
@@ -1237,20 +1209,45 @@ function renderDeadlinksView() {
     }
 }
 
+function renderStats(total, dupCount, catCount, suspiciousCount) {
+    document.getElementById("statsPanel").innerHTML = `
+        <div class="stat-grid">
+            <div class="stat-card"><div class="stat-val text-green-400">${total}</div><div class="stat-lbl">有效合并总数</div></div>
+            <div class="stat-card"><div class="stat-val text-rose-400">${dupCount}</div><div class="stat-lbl">去重滤除</div></div>
+            <div class="stat-card"><div class="stat-val text-amber-400">${catCount}</div><div class="stat-lbl">智能群组</div></div>
+            <div class="stat-card"><div class="stat-val text-orange-400">${suspiciousCount}</div><div class="stat-lbl">可疑空标志点</div></div>
+        </div>
+    `;
+}
+
+function renderDuplicates() {
+    const panel = document.getElementById("duplicatesPanel");
+    if (duplicateList.length === 0) {
+        panel.innerHTML = '<div class="empty"><i class="fas fa-check-circle"></i><p>没有检出多余的冗余重复网址</p></div>'; return;
+    }
+    let html = '<div class="mb-3 text-xs text-zinc-400"><i class="fas fa-info-circle mr-1 text-amber-400"></i>为了体积瘦身，以下重复网址仅保留最先出现的记录：</div><div class="scroll-y">';
+    duplicateList.forEach((d, i) => {
+        html += `<div class="list-row"><span class="text-zinc-600 text-xs min-w-[24px]">${i+1}</span><span class="list-url">${escapeHtml(d.url)}</span></div>`;
+    });
+    panel.innerHTML = html + '</div>';
+}
+
+function renderCompareEmpty() {
+    document.getElementById("comparePanel").innerHTML = '<div class="empty"><i class="fas fa-folder-tree"></i><p>请在上方装载区上传 .html 旧备份书签文件以激活差异交叉比对视图</p></div>';
+    document.getElementById("cmpBadge").classList.add("hidden");
+}
+
+// 修改后的平滑折叠展开交互函数
 function toggleGroup(hd) {
     hd.classList.toggle("open"); 
     const body = hd.nextElementSibling; 
     body.classList.toggle("open");
-    const icon = hd.querySelector('.chevron');
-    if(icon) {
-        icon.style.transform = hd.classList.contains("open") ? "rotate(90deg)" : "rotate(0deg)";
-    }
 }
 
 function switchTab(name) {
     document.querySelectorAll(".tab-bar .tab-btn").forEach(b => {
         if(b.getAttribute('data-tab') === name) b.classList.add("active");
-        else b.classList.remove("active");
+        else b.remove("active");
     });
     const contentPanels = document.querySelectorAll("#resultSection > .card > .tab-content");
     contentPanels.forEach(c => {
@@ -1259,6 +1256,7 @@ function switchTab(name) {
     });
 }
 
+/* ========== 文件上传链路监听接驳机制（强绑定抗错重构） ========== */
 function bindFileUploadEvents() {
     const srcZone = document.getElementById("srcDropZone");
     const srcInput = document.getElementById("txtFileInput");
@@ -1300,7 +1298,7 @@ function executeReadTextStream(file, type) {
             oldBookmarkList = parseBookmarkHtml(e.target.result);
             document.getElementById('oldDropZone').classList.add('has-file');
             document.getElementById('oldFileLabel').innerHTML = `<span class="text-green-400 font-bold"><i class="fas fa-check-circle"></i> 已载入：${file.name} (${oldBookmarkList.length}条)</span>`;
-            showToast(`成功解析关联比对旧库数据： ${oldBookmarkList.length}条`);
+            showToast(`历史备份旧库解析成功： ${oldBookmarkList.length}条`);
             if (processedBookmarks.length > 0) runOptimizedComparison();
         }
     };
@@ -1308,7 +1306,7 @@ function executeReadTextStream(file, type) {
 }
 
 function downloadResult() {
-    if (processedBookmarks.length === 0) return showToast("缓冲区空虚，请先导入与预览机制", "warning");
+    if (processedBookmarks.length === 0) return showToast("缓冲区空虚，请先执行修复并预览", "warning");
     const tree = {};
     processedBookmarks.forEach(b => {
         if(!tree[b.cat]) tree[b.cat] = {};
