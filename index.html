@@ -63,7 +63,7 @@
         .drop-zone:hover, .drop-zone.dragover { border-color: var(--accent); background: var(--accent-glow); color: var(--t2); }
         .drop-zone.has-file { border-color: var(--green); border-style: solid; background: rgba(74,222,128,.04); color: var(--green); }
 
-        /* 标签导航 */
+        /* 稳定的选项卡样式 */
         .main-tab-bar { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; padding-bottom: 2px; overflow-x: auto; }
         .tab-btn {
             padding: 14px 20px; background: none; border: none; color: var(--t3); font-size: 14px; font-weight: 500;
@@ -73,6 +73,10 @@
         .tab-btn.active { color: var(--accent); }
         .tab-btn.active::after { content: ''; position: absolute; bottom: -3px; left: 8px; right: 8px; height: 2px; background: var(--accent); }
         
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeUp .3s ease; }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
         /* 列表行与对比单元 */
         .list-row { display: flex; align-items: center; padding: 9px 14px; gap: 12px; border-bottom: 1px solid rgba(255,255,255,.025); font-size: 13px; transition: background .15s; }
         .list-row:hover { background: var(--s2); }
@@ -85,6 +89,7 @@
         .cmp-hd.open .chevron { transform: rotate(90deg); }
         .cmp-badge { font-size: 11px; padding: 2px 9px; border-radius: 10px; font-weight: 700; }
         
+        /* 绝对显隐控制 */
         .cmp-body { display: none; }
         .cmp-body.open { display: block; }
         
@@ -95,7 +100,7 @@
         .sim-mid { background: rgba(251,146,60,.12); color: var(--orange); }
 
         /* 统计与通用 */
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 10px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 10px; }
         .stat-card { background: var(--s2); border: 1px solid var(--border); border-radius: 10px; padding: 18px 14px; text-align: center; transition: transform .2s, border-color .3s; }
         .stat-card:hover { transform: translateY(-2px); border-color: #3a3a3a; }
         .stat-val { font-size: 30px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
@@ -145,9 +150,9 @@
         <header class="mb-6 bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex gap-3 items-start">
             <i class="fas fa-circle-exclamation text-xl mt-0.5 text-amber-400"></i>
             <div class="text-xs text-amber-200/80 space-y-1">
-                <p class="font-bold text-amber-300 text-sm">💡 数据归档与物理隔离安全对齐系统</p>
-                <p>1. <strong>导航条稳定机制上线</strong>：使用原生物理显隐进行选项卡隔离，顶端标签导航栏永远固定存在。</p>
-                <p>2. <strong>HTTP环境自适应嗅探</strong>：若在 HTTPS 线上(如 GitHub Pages)运行，工具会自动对 `http://` 挂上醒目的安全提示标，大幅降低误报率。</p>
+                <p class="font-bold text-amber-300 text-sm">💡 数据归档与物理安全防崩溃系统</p>
+                <p>1. <strong>全量接口对齐修复</strong>：彻底补齐了内容区域的核心 HTML `id` 逻辑，修复了初始化点击事件中断崩溃问题。</p>
+                <p>2. <strong>智能协议高亮过滤</strong>：在 HTTPS 线上环境运行时，会自动对 `http://` 挂上醒目的安全提示标，大幅降低误报率。</p>
             </div>
         </header>
 
@@ -386,7 +391,6 @@ function updateSliderMetric(val) {
     filterComparisonView();
 }
 
-// 智能嗅探当前工具运行的物理协议环境
 function checkIsHttpsEnvironment() {
     return window.location.protocol === 'https:';
 }
@@ -851,7 +855,7 @@ function batch导出为Txt() {
     showToast(`已下载内含 ${targets.length} 条网址的历史书签 TXT 包！`);
 }
 
-/* ========== 可疑链接高级回溯工作台（选择批量修复） ========== */
+/* ========== 可疑链接高级回溯工作台（勾选选择批量修复） ========== */
 function toggleSelectAllSuspicious(master) {
     const checkboxes = document.querySelectorAll('input[name="suspiciousTraceCheckbox"]');
     checkboxes.forEach(cb => cb.checked = master.checked);
@@ -866,7 +870,6 @@ function renderSuspiciousPanel() {
 
     const traceableList = [];
     const untraceableList = [];
-    const isHttpsEnv = checkIsHttpsEnvironment(); // 核心：环境检查
 
     suspiciousBookmarks.forEach(sb => {
         const coreName = cleanCoreName(sb.originalTitle);
@@ -1007,7 +1010,7 @@ function executeBatchAutoFixSuspicious() {
         suspiciousBookmarks = processedBookmarks.filter(b => b.isSuspicious);
         regenerateHtmlAndPanels();
         runOptimizedComparison();
-        showToast(`⚡ 批量修复成功！已自动帮您复活了选中的 ${fixSuccessCount} 个条目，比对视图已全量刷新。`, "success");
+        showToast(`⚡ 批量修复成功！新库与比对视图已全量刷新对齐。`, "success");
     } else {
         showToast("选中的条目未能匹配到历史旧网址，建议人工填入。", "warning");
         renderSuspiciousPanel();
@@ -1042,7 +1045,7 @@ function commitFixSuspiciousLink(uid, type) {
 /* ========== 分类预览视图编排与在线人工增删改模块 ========== */
 function renderPreview(categoryMap) {
     let html = "";
-    const isHttpsEnv = checkIsHttpsEnvironment(); // 为分类预览引入 HTTPS 环境嗅探器
+    const isHttpsEnv = checkIsHttpsEnvironment(); 
 
     for (const [cat, subs] of Object.entries(categoryMap)) {
         html += '<div class="folder-hd"><i class="fas fa-folder-open mr-1.5"></i>' + escapeHtml(cat) + '</div>';
@@ -1058,7 +1061,6 @@ function renderPreview(categoryMap) {
                 const targetObj = processedBookmarks.find(b => b.url === item.u);
                 const safeId = targetObj ? targetObj.id : "";
 
-                // 【核心新大招】：在分类预览列表中，如果属于线上安全沙箱环境且链接是 http://，自动挂载警告牌提示
                 const isHttpIssue = isHttpsEnv && item.u.toLowerCase().startsWith('http://');
 
                 html += `
@@ -1210,29 +1212,25 @@ function deleteFromActiveBookmarks(url) {
     if (!confirm("确定要将此故障死链从合并集合中彻底删除移除吗？")) return;
     processedBookmarks = processedBookmarks.filter(b => b.url !== url);
     deadBookmarks = deadBookmarks.filter(b => b.url !== url);
-    suspiciousBookmarks = suspiciousBookmarks.filter(b => b.url !== url);
+    suspiciousBookmarks = suspiciousBookmarks.filter(b => b.id !== uid);
+
     regenerateHtmlAndPanels();
     renderDeadlinksView();
     if (oldBookmarkList.length > 0) runOptimizedComparison();
     showToast("硬销毁僵尸节点成功", "success");
 }
 
-/* ========== 【新大招】死链列表环境自适应降噪渲染 ========== */
 function renderDeadlinksView() {
     const listPanel = document.getElementById("deadlinksListPanel");
     const badge = document.getElementById("deadlinksBadge");
     badge.textContent = deadBookmarks.length; badge.style.display = deadBookmarks.length > 0 ? "" : "none";
-    
     if (deadBookmarks.length === 0) {
         listPanel.innerHTML = '<div class="empty text-emerald-400"><i class="fas fa-circle-check"></i><p>优秀！未扫描出建立物理连接超时的故障死链</p></div>';
     } else {
-        const isHttpsEnv = checkIsHttpsEnvironment(); // 核心：注入安全沙箱环境检查
-        let html = '<div class="mb-2 text-xs text-rose-400"><i class="fas fa-circle-exclamation mr-1"></i>以下节点通信失败、超时或受混合安全限制：</div>';
-        
+        const isHttpsEnv = checkIsHttpsEnvironment(); 
+        let html = '<div class="mb-2 text-xs text-rose-400"><i class="fas fa-circle-exclamation mr-1"></i>以下节点通信失败或建立连接超时：</div>';
         deadBookmarks.forEach((db, idx) => {
             const isHttpLink = db.url.toLowerCase().startsWith('http://');
-            
-            // 【 Req 智能标牌】：如果是线上 https 页面在异步嗅探旧 http 协议，直接变更为琥珀色预警标，防止误杀
             let statusTagHtml = `<span class="text-xs px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 whitespace-nowrap">通信超时</span>`;
             if (isHttpLink && isHttpsEnv) {
                 statusTagHtml = `<span class="text-xs px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 whitespace-nowrap"><i class="fas fa-shield-halved mr-1"></i>HTTP协议拦截 (请右键手动验证)</span>`;
@@ -1267,7 +1265,7 @@ function toggleGroup(hd) {
 function switchTab(name) {
     document.querySelectorAll(".main-tab-bar .tab-btn").forEach(b => {
         if(b.getAttribute('data-tab') === name) b.classList.add("active");
-        else b.remove("active");
+        else b.classList.remove("active");
     });
     
     const tabs = ['preview', 'duplicates', 'compare', 'suspicious', 'deadlinks'];
