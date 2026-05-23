@@ -27,85 +27,57 @@
             --green: #4ade80; --orange: #fb923c; --red: #f87171; --blue: #67b8f0;
         }
         body { background: var(--s0); color: var(--t1); font-family: "Noto Sans SC", sans-serif; overflow-y: scroll; }
-
-        /* 浮动光球 */
         .orb { position: fixed; border-radius: 50%; filter: blur(110px); opacity: .1; pointer-events: none; z-index: 0; }
         .orb-1 { width: 520px; height: 520px; background: var(--accent); top: -160px; left: -140px; animation: oF1 22s ease-in-out infinite; }
         .orb-2 { width: 380px; height: 380px; background: #e05555; bottom: -120px; right: -100px; animation: oF2 28s ease-in-out infinite; }
         @keyframes oF1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(90px,130px)} }
         @keyframes oF2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-100px,-70px)} }
-
         .card { background: var(--s1); border: 1px solid var(--border); border-radius: 14px; padding: 28px; transition: border-color .3s; position: relative; }
         .card:hover { border-color: #333; }
-
         textarea {
             width: 100%; height: 220px; padding: 14px; background: var(--s2); border: 1px solid var(--border);
-            border-radius: 8px; color: var(--t1); font-family: "Cascadia Code","Fira Code",monospace;
+            border-radius: 8px; color: var(--t1); font-family: "Cascadia Code",monospace;
             font-size: 13px; line-height: 1.6; resize: vertical; outline: none; transition: border-color .3s, box-shadow .3s;
         }
         textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-
-        .btn {
-            display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border: none; border-radius: 8px;
-            font-size: 14px; font-weight: 700; cursor: pointer; transition: all .2s;
-        }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all .2s; }
         .btn:active { transform: scale(.97); }
         .btn-primary { background: var(--accent); color: #0a0a0a; }
         .btn-primary:hover { background: var(--accent-hover); box-shadow: 0 4px 24px var(--accent-glow); }
         .btn-success { background: #16a34a; color: #fff; }
         .btn-success:hover { background: #15803d; }
-
-        /* 拖拽区 */
-        .drop-zone {
-            border: 2px dashed var(--border); border-radius: 10px; padding: 20px; text-align: center;
-            color: var(--t3); cursor: pointer; transition: all .3s; position: relative;
-        }
+        .drop-zone { border: 2px dashed var(--border); border-radius: 10px; padding: 20px; text-align: center; color: var(--t3); cursor: pointer; transition: all .3s; position: relative; }
         .drop-zone:hover, .drop-zone.dragover { border-color: var(--accent); background: var(--accent-glow); color: var(--t2); }
         .drop-zone.has-file { border-color: var(--green); border-style: solid; background: rgba(74,222,128,.04); color: var(--green); }
-
-        /* 标签导航 */
         .tab-bar { display: flex; border-bottom: 1px solid var(--border); margin: -28px -28px 20px; padding: 0 28px; overflow-x: auto; }
-        .tab-btn {
-            padding: 14px 20px; background: none; border: none; color: var(--t3); font-size: 14px; font-weight: 500;
-            cursor: pointer; position: relative; transition: color .2s; display: flex; align-items: center; gap: 7px; white-space: nowrap;
-        }
+        .tab-btn { padding: 14px 20px; background: none; border: none; color: var(--t3); font-size: 14px; font-weight: 500; cursor: pointer; position: relative; transition: color .2s; display: flex; align-items: center; gap: 7px; white-space: nowrap; }
         .tab-btn:hover { color: var(--t2); }
         .tab-btn.active { color: var(--accent); }
         .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 8px; right: 8px; height: 2px; background: var(--accent); }
-        
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeUp .3s ease; }
         @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-
-        /* 列表行与对比单元 */
         .list-row { display: flex; align-items: center; padding: 9px 14px; gap: 12px; border-bottom: 1px solid rgba(255,255,255,.025); font-size: 13px; transition: background .15s; }
         .list-row:hover { background: var(--s2); }
         .list-url { color: var(--accent); font-family: monospace; font-size: 12px; word-break: break-all; flex: 1; min-width: 0; }
-
         .cmp-group { margin-bottom: 14px; }
         .cmp-hd { display: flex; align-items: center; gap: 10px; padding: 11px 16px; background: var(--s2); border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; transition: background .2s; user-select: none; }
         .cmp-hd:hover { background: var(--s3); }
         .cmp-hd .chevron { transition: transform 0.2s ease; font-size: 12px; color: var(--t3); }
         .cmp-hd.open .chevron { transform: rotate(90deg); }
         .cmp-badge { font-size: 11px; padding: 2px 9px; border-radius: 10px; font-weight: 700; }
-        
-        /* 核心修复样式：采用 display 绝对阻断，根除容器高度塌陷截断 Bug */
         .cmp-body { display: none; }
         .cmp-body.open { display: block; }
-        
         .cmp-item { display: flex; align-items: flex-start; padding: 12px 16px; gap: 12px; border-bottom: 1px solid rgba(255,255,255,.02); font-size: 13px; flex-wrap: wrap; }
         .cmp-item:hover { background: rgba(255,255,255,.015); }
         .sim-tag { font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 700; white-space: nowrap; }
         .sim-high { background: rgba(74,222,128,.12); color: var(--green); }
         .sim-mid { background: rgba(251,146,60,.12); color: var(--orange); }
-
-        /* 统计与通用 */
         .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 10px; }
         .stat-card { background: var(--s2); border: 1px solid var(--border); border-radius: 10px; padding: 18px 14px; text-align: center; transition: transform .2s, border-color .3s; }
         .stat-card:hover { transform: translateY(-2px); border-color: #3a3a3a; }
         .stat-val { font-size: 30px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
         .stat-lbl { font-size: 12px; color: var(--t3); font-weight: 500; }
-
         .preview-box { max-height: 550px; overflow-y: auto; padding-right: 6px; }
         .folder-hd { font-weight: 700; color: var(--accent); margin: 14px 0 4px; padding: 5px 10px; background: rgba(232,168,56,.07); border-radius: 5px; display: inline-block; }
         .subfolder-hd { font-weight: 600; color: var(--blue); margin: 8px 0 2px 22px; font-size: 13px; }
@@ -115,20 +87,16 @@
         .bm-tag { font-size: 10px; padding: 1px 6px; border-radius: 3px; font-weight: 600; }
         .bm-tag-w { background: rgba(251,146,60,.12); color: var(--orange); }
         .bm-tag-g { background: rgba(74,222,128,.12); color: var(--green); }
-
         .empty { text-align: center; padding: 50px 20px; color: var(--t3); }
         .empty i { font-size: 42px; margin-bottom: 14px; display: block; opacity: .4; }
-
         #toastBox { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
         .toast { padding: 12px 22px; border-radius: 8px; font-size: 14px; color: #fff; transform: translateX(130%); transition: transform .3s; }
         .toast.show { transform: translateX(0); }
-
         .scroll-y { overflow-y: auto; max-height: 580px; padding-right: 6px; overflow-x: hidden; }
         .scroll-y::-webkit-scrollbar { width: 6px; }
         .scroll-y::-webkit-scrollbar-track { background: transparent; }
         .scroll-y::-webkit-scrollbar-thumb { background: var(--s3); border-radius: 4px; }
         .scroll-y::-webkit-scrollbar-thumb:hover { background: #383838; }
-
         .edit-btn { padding: 5px 10px; border-radius: 5px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all .2s; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; }
         .edit-btn-add { background: rgba(74,222,128,.12); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
         .edit-btn-add:hover { background: rgba(74,222,128,.25); }
@@ -136,7 +104,6 @@
         .edit-btn-remove:hover { background: rgba(248,113,113,.25); }
         .edit-btn-save { background: rgba(232,168,56,.12); color: var(--accent); border: 1px solid rgba(232,168,56,0.2); }
         .edit-btn-save:hover { background: rgba(232,168,56,.25); }
-
         .progress-bar-container { background: var(--s3); border-radius: 20px; overflow: hidden; width: 100%; height: 8px; margin-top: 10px; }
         .progress-bar-fill { background: var(--blue); height: 100%; width: 0%; transition: width 0.1s linear; }
     </style>
@@ -180,7 +147,7 @@
                     </div>
                 </div>
 
-                <textarea id="rawTextArea" placeholder="在此处粘贴、展示或编辑待修复的书签原始格式行（支持大类,小类,标题,备注,预警,网址这种CSV文本）..."></textarea>
+                <textarea id="rawTextArea" placeholder="在此处粘贴、展示或编辑待修复的书签原始格式行（支持大类,小类,网站标题,备注,预警,网址这种CSV文本）..."></textarea>
 
                 <div class="mt-4 pt-4 border-t border-neutral-800 flex flex-wrap gap-2">
                     <button class="btn btn-primary" onclick="processData()"><i class="fas fa-wrench"></i> 修复并预览</button>
@@ -193,26 +160,26 @@
 
                 <div class="card" style="padding-top:0">
                     <div class="tab-bar">
-                        <button class="tab-btn active" data-tab="preview" onclick="switchTab('preview', this)">
+                        <button class="tab-btn active" data-tab="preview" onclick="switchTab('preview')">
                             <i class="fas fa-eye"></i> 分类预览
                         </button>
-                        <button class="tab-btn" data-tab="duplicates" onclick="switchTab('duplicates', this)">
+                        <button class="tab-btn" data-tab="duplicates" onclick="switchTab('duplicates')">
                             <i class="fas fa-clone"></i> 去重详情 <span id="dupBadge" class="tab-badge" style="display:none">0</span>
                         </button>
-                        <button class="tab-btn" data-tab="compare" onclick="switchTab('compare', this)">
+                        <button class="tab-btn" data-tab="compare" onclick="switchTab('compare')">
                             <i class="fas fa-code-compare"></i> 对比结果 <span id="cmpBadge" class="tab-badge tab-badge-green hidden">0</span>
                         </button>
-                        <button class="tab-btn" data-tab="suspicious" onclick="switchTab('suspicious', this)">
+                        <button class="tab-btn" data-tab="suspicious" onclick="switchTab('suspicious')">
                             <i class="fas fa-exclamation-triangle"></i> 可疑链接 <span id="suspiciousBadge" class="tab-badge" style="display:none">0</span>
                         </button>
-                        <button class="tab-btn" data-tab="deadlinks" onclick="switchTab('deadlinks', this)">
+                        <button class="tab-btn" data-tab="deadlinks" onclick="switchTab('deadlinks')">
                             <i class="fas fa-plug-circle-xmark"></i> 无法访问 <span id="deadlinksBadge" class="tab-badge tab-badge-blue" style="display:none">0</span>
                         </button>
                     </div>
 
                     <div id="tabPreview" class="tab-content active space-y-3">
                         <div class="flex justify-end p-1">
-                            <button class="edit-btn edit-btn-save py-1 px-2.5 text-xs rounded-md shadow flex items-center gap-1" onclick="regenerateHtmlAndPanels(); if(oldBookmarkList.length>0) runOptimizedComparison(); showToast('中央数据树树形结构刷新对齐成功！','success');" title="微调过大类小类或增删改后，点此手动对齐重编中央数据树">
+                            <button class="edit-btn edit-btn-save py-1 px-2.5 text-xs rounded-md shadow flex items-center gap-1" onclick="regenerateHtmlAndPanels(); if(oldBookmarkList.length>0) runOptimizedComparison(); showToast('中央数据树树形结构刷新对齐成功！','success');">
                                 <i class="fas fa-arrows-rotate"></i> 🔄 实时刷新重编最新书签树
                             </button>
                         </div>
@@ -298,10 +265,15 @@ let deadBookmarks = [];
 
 let rawComparisonCache = { matched: [], onlyInNew: [], onlyInOld: [] };
 
-/* ========== 核心算法与特征指纹计算 ========== */
+/* ========== 核心安全与解码处理 ========== */
 function escapeHtml(text) {
     if (!text) return "";
-    return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    return text.toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
 }
 
 function generateUid() {
@@ -330,13 +302,13 @@ function normalizeUrl(url) {
         if (u.endsWith('/')) u = u.slice(0, -1);
         return u;
     } catch {
-        return url.toLowerCase().trim();
+        return url ? url.toLowerCase().trim() : '';
     }
 }
 
 function cleanCoreName(name) {
-    if(!name) return "";
-    return name.toLowerCase().replace(/\[可疑链接已删除\]/g, "").replace(/[\s,.\-_|()\[\]【】、，@\/\\]+/g, "").trim();
+    if (!name) return "";
+    return name.toString().toLowerCase().replace(/\[可疑链接已删除\]/g, "").replace(/[\s,.\-_|()\[\]【】、，@\/\\]+/g, "").trim();
 }
 
 function nameSimilarity(a, b) {
@@ -351,7 +323,7 @@ function nameSimilarity(a, b) {
 
 function extractDomain(url) {
     try {
-        if (url.startsWith('about:blank')) return 'deleted-placeholder';
+        if (!url || url.startsWith('about:blank')) return 'deleted-placeholder';
         const u = new URL(url.startsWith('http') ? url : 'http://' + url);
         return u.hostname.replace(/^www\./, '');
     } catch {
@@ -567,7 +539,7 @@ function processData() {
     showToast("数据重编成功，结果已全量展开！", "success");
 }
 
-/* ========== 差异比对引擎与同名深度清洗拦截 ========== */
+/* ========== 高性能查重索引引擎优化 ========== */
 function runOptimizedComparison() {
     if (processedBookmarks.length === 0 || oldBookmarkList.length === 0) return;
 
@@ -575,6 +547,7 @@ function runOptimizedComparison() {
     rawComparisonCache.onlyInNew = [];
     rawComparisonCache.onlyInOld = [];
     
+    // 性能优化：建立O(1)级快速匹配映射索引
     const activeNamesSet = new Set();
     const activeCoreNamesSet = new Set();
     processedBookmarks.forEach(b => {
@@ -677,37 +650,41 @@ function filterComparisonView() {
 }
 
 function renderComparisonHTML(matched, onlyInNew, onlyInOld) {
-    let html = `<div class="scroll-y space-y-4">`;
+    const panel = document.getElementById("comparePanel");
+    panel.innerHTML = "";
 
-    // 1. 双向配对区
-    html += `
-        <div class="cmp-group">
-            <div class="cmp-hd" onclick="toggleGroup(this)">
-                <i class="fas fa-chevron-right chevron"></i>
-                <i class="fas fa-link text-green-400"></i>
-                <span>新旧版本智能双向配对成功集合</span>
-                <span class="cmp-badge ml-auto bg-green-500/10 text-green-400">${matched.length}</span>
-            </div>
-            <div class="cmp-body">
-    `;
-    if (matched.length === 0) html += '<div class="empty text-xs py-4"><p>暂无符合当前条件下的匹配对齐项目</p></div>';
-    matched.forEach(m => {
-        html += `
-            <div class="cmp-item text-xs border-b border-zinc-800/60 last:border-0 py-3 flex flex-col gap-2">
-                <div class="flex items-start justify-between gap-4 w-full">
-                    <div class="flex-1 min-w-0">
-                        <span class="text-zinc-200 font-bold break-all text-sm">${escapeHtml(m.newTitle)}</span>
-                        <div class="font-mono text-amber-400 select-all mt-0.5 break-all">${escapeHtml(m.newUrl)}</div>
-                    </div>
-                    <button class="edit-btn edit-btn-save whitespace-nowrap" onclick="manualAddMatch('${m.newId}')">
-                        <i class="fas fa-plus"></i> 追加绑定旧库
-                    </button>
-                </div>
+    const createGroup = (title, iconClass, count, itemsHtml) => {
+        const groupDiv = document.createElement("div");
+        groupDiv.className = "cmp-group";
+        
+        const hdDiv = document.createElement("div");
+        hdDiv.className = "cmp-hd";
+        hdDiv.onclick = () => toggleGroup(hdDiv);
+        
+        hdDiv.innerHTML = `
+            <i class="fas fa-chevron-right chevron"></i>
+            <i class="${iconClass}"></i>
+            <span>${title}</span>
+            <span class="cmp-badge ml-auto bg-zinc-800 text-zinc-400">${count}</span>
         `;
+        
+        const bodyDiv = document.createElement("div");
+        bodyDiv.className = "cmp-body";
+        bodyDiv.innerHTML = itemsHtml;
+        
+        groupDiv.appendChild(hdDiv);
+        groupDiv.appendChild(bodyDiv);
+        return groupDiv;
+    };
+
+    // 组1：双向配对区
+    let matchedHtml = matched.length === 0 ? '<div class="empty text-xs py-4"><p>暂无符合当前条件下的匹配项目</p></div>' : '';
+    matched.forEach(m => {
+        let oldMatchesHtml = "";
         if (m.oldMatches.length > 0) {
-            html += '<div class="mt-1 pl-3 border-l-2 border-zinc-700 space-y-2 w-full">';
+            oldMatchesHtml = `<div class="mt-1 pl-3 border-l-2 border-zinc-700 space-y-2 w-full">`;
             m.oldMatches.forEach(om => {
-                html += `
+                oldMatchesHtml += `
                     <div class="flex items-center justify-between gap-2 bg-zinc-950/40 p-2 rounded border border-zinc-800/50">
                         <div class="min-w-0 flex-1">
                             <span class="text-zinc-300 font-medium">${escapeHtml(om.old.title)}</span>
@@ -715,152 +692,89 @@ function renderComparisonHTML(matched, onlyInNew, onlyInOld) {
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="sim-tag sim-mid">${Math.round(om.score * 100)}% 契合</span>
-                            <button class="edit-btn edit-btn-remove px-2 py-1 text-[10px]" onclick="manualRemoveMatch('${m.newId}', '${escapeHtml(om.old.url)}')">
+                            <button class="edit-btn edit-btn-remove px-2 py-1 text-[10px]" data-newid="${m.newId}" data-oldurl="${escapeHtml(om.old.url)}" onclick="manualRemoveMatch(this.dataset.newid, this.dataset.oldurl)">
                                 <i class="fas fa-link-slash"></i> 解除配对
                             </button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
-            html += '</div>';
+            oldMatchesHtml += `</div>`;
         }
-        html += '</div>';
-    });
-    html += '</div></div>';
 
-    // 2. 旧独有缺失面板
-    html += `
-        <div class="cmp-group">
-            <div class="cmp-hd flex items-center justify-between" onclick="toggleGroup(this)">
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-chevron-right chevron"></i>
-                    <i class="fas fa-circle-minus text-rose-400"></i>
-                    <span>旧档案独有 (名字和网址新库中均无，真正遗漏的“漏网之鱼”)</span>
-                </div>
-                <span class="cmp-badge bg-rose-500/10 text-rose-400">${onlyInOld.length}</span>
-            </div>
-            <div class="cmp-body p-3 bg-zinc-900/40 rounded-b-xl border-x border-b border-zinc-800 space-y-3">
-                ${onlyInOld.length > 0 ? `
-                <div class="flex items-center justify-between bg-zinc-950/80 p-2.5 rounded-lg border border-zinc-800 text-xs">
-                    <label class="flex items-center gap-2 cursor-pointer select-none text-neutral-400 hover:text-white transition-all">
-                        <input type="checkbox" id="selectAllOldCheckbox" class="w-3.5 h-3.5 accent-amber-500 cursor-pointer" onchange="toggleSelectAllOld(this)">
-                        <span>全选 / 反选全部</span>
-                    </label>
-                    <div class="flex gap-2">
-                        <button class="edit-btn edit-btn-add py-1.5" onclick="batch挽回到新书签()"><i class="fas fa-reply-all"></i> 批量挽回到新书签</button>
-                        <button class="edit-btn edit-btn-save py-1.5" onclick="batch导出为Txt()"><i class="fas fa-file-arrow-down"></i> 批量导出为 TXT 下载</button>
+        matchedHtml += `
+            <div class="cmp-item text-xs border-b border-zinc-800/60 last:border-0 py-3 flex flex-col gap-2">
+                <div class="flex items-start justify-between gap-4 w-full">
+                    <div class="flex-1 min-w-0">
+                        <span class="text-zinc-200 font-bold break-all text-sm">${escapeHtml(m.newTitle)}</span>
+                        <div class="font-mono text-amber-400 select-all mt-0.5 break-all">${escapeHtml(m.newUrl)}</div>
                     </div>
+                    <button class="edit-btn edit-btn-save whitespace-nowrap" data-newid="${m.newId}" onclick="manualAddMatch(this.dataset.newid)">
+                        <i class="fas fa-plus"></i> 追加绑定旧库
+                    </button>
                 </div>
-                ` : ''}
-    `;
-    if (onlyInOld.length === 0) html += '<div class="empty text-xs py-4"><p>无真正缺失的历史节点记录</p></div>';
-    onlyInOld.forEach((ob, idx) => {
-        html += `
-            <div class="cmp-item text-xs justify-between items-center py-2.5 border-b border-zinc-800/40 last:border-0 hover:bg-zinc-900/60 rounded px-2">
-                <div class="flex items-center gap-3 min-w-0 flex-1">
-                    <input type="checkbox" id="old_chk_${ob.id || idx}" name="oldUniqueCheckbox" data-title="${escapeHtml(ob.title)}" data-url="${escapeHtml(ob.url)}" class="w-3.5 h-3.5 accent-amber-500 cursor-pointer">
-                    <div class="min-w-0 flex-1">
-                        <div class="text-zinc-300 font-semibold truncate">${escapeHtml(ob.title)}</div>
-                        <a href="${escapeHtml(ob.url)}" target="_blank" class="font-mono text-zinc-500 hover:text-amber-400 underline transition-all text-[11px] truncate block mt-0.5" title="点击直接在新窗口打开查验网页">
-                            <i class="fas fa-arrow-up-right-from-square mr-1 text-[9px]"></i>${escapeHtml(ob.url)}
-                        </a>
-                    </div>
-                </div>
-                <button class="edit-btn edit-btn-add whitespace-nowrap ml-4" onclick="manualAddToNew('${escapeHtml(ob.title)}', '${escapeHtml(ob.url)}')">
-                    <i class="fas fa-reply mr-1"></i>挽回单条
-                </button>
-            </div>
-        `;
+                ${oldMatchesHtml}
+            </div>`;
     });
-    html += '</div></div>';
+    panel.appendChild(createGroup("新旧版本智能双向配对成功集合", "fas fa-link text-green-400", matched.length, matchedHtml));
 
-    // 3. 纯新增面板
-    html += `
-        <div class="cmp-group">
-            <div class="cmp-hd" onclick="toggleGroup(this)">
-                <i class="fas fa-chevron-right chevron"></i>
-                <i class="fas fa-circle-plus text-sky-400"></i>
-                <span>当前流独有新增 (属于纯新站点，可备份同步)</span>
-                <span class="cmp-badge ml-auto bg-sky-500/10 text-sky-400">${onlyInNew.length}</span>
-            </div>
-            <div class="cmp-body">
-    `;
-    if (onlyInNew.length === 0) html += '<div class="empty text-xs py-4"><p>无纯新增站点记录</p></div>';
+    // 组2：旧档案缺失面板
+    let oldHtml = "";
+    if (onlyInOld.length === 0) {
+        oldHtml = '<div class="empty text-xs py-4"><p>无真正缺失的历史节点记录</p></div>';
+    } else {
+        oldHtml += `
+            <div class="flex items-center justify-between bg-zinc-950/80 p-2.5 rounded-lg border border-zinc-800 text-xs mb-3">
+                <label class="flex items-center gap-2 cursor-pointer select-none text-neutral-400 hover:text-white transition-all">
+                    <input type="checkbox" id="selectAllOldCheckbox" class="w-3.5 h-3.5 accent-amber-500 cursor-pointer" onchange="toggleSelectAllOld(this)">
+                    <span>全选 / 反选全部</span>
+                </label>
+                <div class="flex gap-2">
+                    <button class="edit-btn edit-btn-add py-1.5" onclick="batch挽回到新书签()"><i class="fas fa-reply-all"></i> 批量挽回到新书签</button>
+                    <button class="edit-btn edit-btn-save py-1.5" onclick="batch导出为Txt()"><i class="fas fa-file-arrow-down"></i> 批量导出为 TXT 下载</button>
+                </div>
+            </div>`;
+        onlyInOld.forEach((ob, idx) => {
+            oldHtml += `
+                <div class="cmp-item text-xs justify-between items-center py-2.5 border-b border-zinc-800/40 last:border-0 hover:bg-zinc-900/60 rounded px-2">
+                    <div class="flex items-center gap-3 min-w-0 flex-1">
+                        <input type="checkbox" id="old_chk_${ob.id || idx}" name="oldUniqueCheckbox" data-title="${escapeHtml(ob.title)}" data-url="${escapeHtml(ob.url)}" class="w-3.5 h-3.5 accent-amber-500 cursor-pointer">
+                        <div class="min-w-0 flex-1">
+                            <div class="text-zinc-300 font-semibold truncate">${escapeHtml(ob.title)}</div>
+                            <a href="${escapeHtml(ob.url)}" target="_blank" class="font-mono text-zinc-500 hover:text-amber-400 underline transition-all text-[11px] truncate block mt-0.5">
+                                <i class="fas fa-arrow-up-right-from-square mr-1 text-[9px]"></i>${escapeHtml(ob.url)}
+                            </a>
+                        </div>
+                    </div>
+                    <button class="edit-btn edit-btn-add whitespace-nowrap ml-4" data-title="${escapeHtml(ob.title)}" data-url="${escapeHtml(ob.url)}" onclick="manualAddToNew(this.dataset.title, this.dataset.url)">
+                        <i class="fas fa-reply mr-1"></i>挽回单条
+                    </button>
+                </div>`;
+        });
+    }
+    panel.appendChild(createGroup("旧档案独有 (名称和网址新库中均无，真正遗漏的“漏网之鱼”)", "fas fa-circle-minus text-rose-400", onlyInOld.length, oldHtml));
+
+    // 组3：纯新增面板
+    let newHtml = onlyInNew.length === 0 ? '<div class="empty text-xs py-4"><p>无纯新增站点记录</p></div>' : '';
     onlyInNew.forEach(nb => {
-        html += `
+        newHtml += `
             <div class="cmp-item text-xs justify-between items-center py-2.5">
                 <div class="flex-1 min-w-0">
                     <div class="text-zinc-300 font-medium truncate">${escapeHtml(nb.title)}</div>
                     <div class="font-mono text-zinc-500 truncate mt-0.5">${escapeHtml(nb.url)}</div>
                 </div>
-                <button class="edit-btn edit-btn-save whitespace-nowrap" onclick="manualAddToOld('${escapeHtml(nb.title)}', '${escapeHtml(nb.url)}')">
+                <button class="edit-btn edit-btn-save whitespace-nowrap" data-title="${escapeHtml(nb.title)}" data-url="${escapeHtml(nb.url)}" onclick="manualAddToOld(this.dataset.title, this.dataset.url)">
                     <i class="fas fa-share mr-1"></i>备份入旧档案
                 </button>
-            </div>
-        `;
+            </div>`;
     });
-    html += '</div></div></div>';
-
-    document.getElementById("comparePanel").innerHTML = html;
-    document.getElementById("cmpBadge").textContent = matched.length + onlyInOld.length + onlyInNew.length;
-    document.getElementById("cmpBadge").classList.remove("hidden");
+    panel.appendChild(createGroup("当前流独有新增 (属于纯新站点，可备份同步)", "fas fa-circle-plus text-sky-400", onlyInNew.length, newHtml));
 }
 
-/* ========== 批量修改控制句柄群 ========== */
-function toggleSelectAllOld(master) {
-    const checkboxes = document.querySelectorAll('input[name="oldUniqueCheckbox"]');
-    checkboxes.forEach(cb => cb.checked = master.checked);
-}
-
-function getSelectedOldItems() {
-    const checkboxes = document.querySelectorAll('input[name="oldUniqueCheckbox"]:checked');
-    const items = [];
-    checkboxes.forEach(cb => {
-        items.push({ title: cb.dataset.title, url: cb.dataset.url });
-    });
-    return items;
-}
-
-function batch挽回到新书签() {
-    const targets = getSelectedOldItems();
-    if(targets.length === 0) return showToast("请先在列表中勾选需要批量挽回的书签项！", "warning");
-    
-    let successCount = 0;
-    targets.forEach(ob => {
-        if (!processedBookmarks.some(b => normalizeUrl(b.url) === normalizeUrl(ob.url))) {
-            processedBookmarks.push({
-                id: generateUid(), title: ob.title, url: ob.url, cat: "历史批量挽回", sub: "其他", isSuspicious: false, originalTitle: ob.title
-            });
-            successCount++;
-        }
-    });
-    regenerateHtmlAndPanels();
-    runOptimizedComparison();
-    showToast(`成功将 ${successCount} 条历史残余书签批量挽回并录入新库！`, "success");
-}
-
-function batch导出为Txt() {
-    const targets = getSelectedOldItems();
-    if(targets.length === 0) return showToast("请先勾选需要批量打包导出的书签！", "warning");
-    let txtContent = "大类,小类,网站标题,备注说明,网络预警,网址\n";
-    targets.forEach(item => {
-        txtContent += `历史独有备份,批量导出,${item.title},自历史独有列表过滤打包下载,国内直连,${item.url}\n`;
-    });
-    const blob = new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
-    const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
-    link.download = "缺失历史书签数据一键包_" + new Date().toISOString().slice(0, 10) + ".txt";
-    link.click(); URL.revokeObjectURL(link.href);
-    showToast(`已下载内含 ${targets.length} 条网址的历史书签 TXT 包！`);
-}
-
-/* ========== 可疑链接高级回溯工作台（勾选选择批量修复） ========== */
-function toggleSelectAllSuspicious(master) {
-    const checkboxes = document.querySelectorAll('input[name="suspiciousTraceCheckbox"]');
-    checkboxes.forEach(cb => cb.checked = master.checked);
-}
-
+/* ========== 视图层控制面板与组件交互 ========== */
 function renderSuspiciousPanel() {
     const panel = document.getElementById("suspiciousPanel");
+    panel.innerHTML = "";
+
     if (suspiciousBookmarks.length === 0) {
         panel.innerHTML = '<div class="empty"><i class="fas fa-shield"></i><p>当前合并夹中干净清爽，没有残缺的已删除标志项</p></div>'; 
         return;
@@ -872,7 +786,6 @@ function renderSuspiciousPanel() {
     suspiciousBookmarks.forEach(sb => {
         const coreName = cleanCoreName(sb.originalTitle);
         const matches = [];
-        
         if (oldBookmarkList.length > 0 && coreName) {
             oldBookmarkList.forEach(ob => {
                 const score = calculateMatchScore({ title: coreName, url: "" }, ob, 'domain');
@@ -880,244 +793,141 @@ function renderSuspiciousPanel() {
             });
             matches.sort((a, b) => b.score - a.score);
         }
-
-        if (matches.length > 0) {
-            traceableList.push({ item: sb, matches });
-        } else {
-            untraceableList.push(sb);
-        }
+        if (matches.length > 0) traceableList.push({ item: sb, matches });
+        else untraceableList.push(sb);
     });
 
-    let html = `<div class="scroll-y max-h-[500px] space-y-4">`;
+    const wrapper = document.createElement("div");
+    wrapper.className = "scroll-y space-y-4";
 
-    // 组1：成功追溯项（可打勾选择批量自动复活）
-    html += `
-        <div class="bg-zinc-900/40 border border-zinc-800 p-3 rounded-xl space-y-2">
-            <h4 class="text-xs font-bold text-emerald-400 flex items-center gap-1.5 border-b border-zinc-800 pb-2 mb-2">
-                <i class="fas fa-circle-check"></i> 成功追溯关联项 (${traceableList.length}条)
-            </h4>
-            ${traceableList.length > 0 ? `
-            <div class="flex items-center justify-between bg-zinc-950/80 p-2.5 rounded-lg border border-zinc-800 text-xs mb-3">
-                <label class="flex items-center gap-2 cursor-pointer select-none text-neutral-400 hover:text-white transition-all">
-                    <input type="checkbox" id="selectAllSuspiciousCheckbox" class="w-3.5 h-3.5 accent-amber-500 cursor-pointer" onchange="toggleSelectAllSuspicious(this)">
-                    <span>全选 / 反选所有可追溯项</span>
-                </label>
-            </div>
-            ` : ''}
-    `;
-    if (traceableList.length === 0) html += '<p class="text-neutral-600 text-xs py-2 text-center">暂无自动匹配出的关联项，请确保右上方已成功加载旧favorites.html文件</p>';
-    traceableList.forEach((trace) => {
-        html += `
-            <div class="flex flex-wrap items-center justify-between gap-3 bg-zinc-950/40 p-2.5 rounded border border-zinc-800 text-xs">
-                <div class="flex items-start gap-3 min-w-0 flex-1">
-                    <input type="checkbox" name="suspiciousTraceCheckbox" data-id="${trace.item.id}" class="w-3.5 h-3.5 accent-amber-500 cursor-pointer mt-0.5">
-                    <div class="min-w-0 flex-1">
-                        <span class="text-zinc-400 font-mono">[${trace.item.cat}]</span> <span class="text-zinc-200 font-bold">${escapeHtml(trace.item.originalTitle)}</span>
-                        <div class="mt-1.5 flex items-center gap-2">
-                            <span class="text-[11px] text-emerald-400 font-medium">选定对齐网址:</span>
-                            <select id="sel_url_${trace.item.id}" class="bg-zinc-900 text-zinc-100 border border-zinc-700 rounded px-1.5 py-0.5 text-[11px] max-w-md outline-none">
-                                ${trace.matches.map(m => `<option value="${escapeHtml(m.url)}">${escapeHtml(m.title)} → ${escapeHtml(m.url)} [${Math.round(m.score*100)}%]</option>`).join('')}
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <button class="edit-btn edit-btn-add whitespace-nowrap" onclick="commitFixSuspiciousLink('${trace.item.id}', 'select')">
-                    <i class="fas fa-check-double"></i> 确认修复
-                </button>
-            </div>
+    // Traceable Group
+    const tgDiv = document.createElement("div");
+    tgDiv.className = "bg-zinc-900/40 border border-zinc-800 p-3 rounded-xl space-y-2";
+    tgDiv.innerHTML = `<h4 class="text-xs font-bold text-emerald-400 flex items-center gap-1.5 border-b border-zinc-800 pb-2 mb-2"><i class="fas fa-circle-check"></i> 成功追溯关联项 (${traceableList.length}条)</h4>`;
+    
+    if(traceableList.length > 0) {
+        const traceControls = document.createElement("div");
+        traceControls.className = "flex items-center justify-between bg-zinc-950/80 p-2.5 rounded-lg border border-zinc-800 text-xs mb-3";
+        traceControls.innerHTML = `
+            <label class="flex items-center gap-2 cursor-pointer select-none text-neutral-400 hover:text-white transition-all">
+                <input type="checkbox" id="selectAllSuspiciousCheckbox" class="w-3.5 h-3.5 accent-amber-500 cursor-pointer" onchange="toggleSelectAllSuspicious(this)">
+                <span>全选 / 反选所有可追溯项</span>
+            </label>
         `;
-    });
-    html += `</div>`;
+        tgDiv.appendChild(traceControls);
+    } else {
+        tgDiv.innerHTML += '<p class="text-neutral-600 text-xs py-2 text-center">暂无自动匹配出的关联项</p>';
+    }
 
-    // 组2：无法追溯项
-    html += `
-        <div class="bg-zinc-900/40 border border-zinc-800 p-3 rounded-xl space-y-2">
-            <h4 class="text-xs font-bold text-orange-400 flex items-center gap-1.5 border-b border-zinc-800 pb-2">
-                <i class="fas fa-circle-question"></i> 无法追溯孤儿项 (${untraceableList.length}条)
-            </h4>
-    `;
-    if (untraceableList.length === 0) html += '<p class="text-neutral-600 text-xs py-2 text-center">无独立留存的孤儿坏链</p>';
-    untraceableList.forEach((sb) => {
-        html += `
-            <div class="flex flex-wrap items-center justify-between gap-3 bg-zinc-950/40 p-2.5 rounded border border-zinc-800 text-xs">
-                <div class="min-w-0 flex-1">
-                    <span class="text-zinc-500 font-mono">[${sb.cat}]</span> <span class="text-zinc-300 font-medium">${escapeHtml(sb.originalTitle)}</span>
-                    <div class="mt-1.5 flex items-center gap-2 w-full">
-                        <span class="text-[11px] text-orange-400 font-medium whitespace-nowrap">手动补齐URL:</span>
-                        <input type="text" id="input_url_${sb.id}" class="w-full max-w-md bg-zinc-900 text-zinc-100 border border-zinc-700 rounded px-2 py-0.5 text-[11px] outline-none placeholder:text-zinc-600" placeholder="https:// 请在此处补齐输入该站点最新的合法有效网址...">
-                    </div>
+    traceableList.forEach(trace => {
+        const itemRow = document.createElement("div");
+        itemRow.className = "flex flex-wrap items-center justify-between gap-3 bg-zinc-950/40 p-2.5 rounded border border-zinc-800 text-xs";
+        
+        const innerLeft = document.createElement("div");
+        innerLeft.className = "flex items-start gap-3 min-w-0 flex-1";
+        
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.name = "suspiciousTraceCheckbox";
+        cb.dataset.id = trace.item.id;
+        cb.className = "w-3.5 h-3.5 accent-amber-500 cursor-pointer mt-0.5";
+        
+        const contentDiv = document.createElement("div");
+        contentDiv.className = "min-w-0 flex-1";
+        contentDiv.innerHTML = `<span class="text-zinc-400 font-mono">[${escapeHtml(trace.item.cat)}]</span> <span class="text-zinc-200 font-bold">${escapeHtml(trace.item.originalTitle)}</span>`;
+        
+        const selectContainer = document.createElement("div");
+        selectContainer.className = "mt-1.5 flex items-center gap-2";
+        selectContainer.innerHTML = `<span class="text-[11px] text-emerald-400 font-medium">选定对齐网址:</span>`;
+        
+        const selectEl = document.createElement("select");
+        selectEl.id = `sel_url_${trace.item.id}`;
+        selectEl.className = "bg-zinc-900 text-zinc-100 border border-zinc-700 rounded px-1.5 py-0.5 text-[11px] max-w-md outline-none";
+        trace.matches.forEach(m => {
+            const opt = document.createElement("option");
+            opt.value = m.url;
+            opt.innerText = `${m.title} → ${m.url} [${Math.round(m.score*100)}%]`;
+            selectEl.appendChild(opt);
+        });
+        
+        selectContainer.appendChild(selectEl);
+        contentDiv.appendChild(selectContainer);
+        innerLeft.appendChild(cb);
+        innerLeft.appendChild(contentDiv);
+        
+        const fixBtn = document.createElement("button");
+        fixBtn.className = "edit-btn edit-btn-add whitespace-nowrap";
+        fixBtn.innerHTML = `<i class="fas fa-check-double"></i> 确认修复`;
+        fixBtn.onclick = () => commitFixSuspiciousLink(trace.item.id, 'select');
+        
+        itemRow.appendChild(innerLeft);
+        itemRow.appendChild(fixBtn);
+        tgDiv.appendChild(itemRow);
+    });
+
+    // Untraceable Group
+    const utgDiv = document.createElement("div");
+    utgDiv.className = "bg-zinc-900/40 border border-zinc-800 p-3 rounded-xl space-y-2";
+    utgDiv.innerHTML = `<h4 class="text-xs font-bold text-orange-400 flex items-center gap-1.5 border-b border-zinc-800 pb-2"><i class="fas fa-circle-question"></i> 无法追溯孤儿项 (${untraceableList.length}条)</h4>`;
+    
+    if (untraceableList.length === 0) {
+        utgDiv.innerHTML += '<p class="text-neutral-600 text-xs py-2 text-center">无独立留存的孤儿链</p>';
+    }
+
+    untraceableList.forEach(sb => {
+        const itemRow = document.createElement("div");
+        itemRow.className = "flex flex-wrap items-center justify-between gap-3 bg-zinc-950/40 p-2.5 rounded border border-zinc-800 text-xs";
+        itemRow.innerHTML = `
+            <div class="min-w-0 flex-1">
+                <span class="text-zinc-500 font-mono">[${escapeHtml(sb.cat)}]</span> <span class="text-zinc-300 font-medium">${escapeHtml(sb.originalTitle)}</span>
+                <div class="mt-1.5 flex items-center gap-2 w-full">
+                    <span class="text-[11px] text-orange-400 font-medium whitespace-nowrap">手动补齐URL:</span>
+                    <input type="text" id="input_url_${sb.id}" class="w-full max-w-md bg-zinc-900 text-zinc-100 border border-zinc-700 rounded px-2 py-0.5 text-[11px] outline-none placeholder:text-zinc-600" placeholder="https:// 请输入最新有效网址...">
                 </div>
-                <button class="edit-btn edit-btn-save whitespace-nowrap" onclick="commitFixSuspiciousLink('${sb.id}', 'input')">
-                    <i class="fas fa-wrench"></i> 填入并激活
-                </button>
-            </div>
-        `;
+            </div>`;
+        
+        const fixBtn = document.createElement("button");
+        fixBtn.className = "edit-btn edit-btn-save whitespace-nowrap";
+        fixBtn.innerHTML = `<i class="fas fa-wrench"></i> 填入并激活`;
+        fixBtn.onclick = () => commitFixSuspiciousLink(sb.id, 'input');
+        itemRow.appendChild(fixBtn);
+        utgDiv.appendChild(itemRow);
     });
-    html += `</div></div>`;
 
-    panel.innerHTML = html;
+    wrapper.appendChild(tgDiv);
+    wrapper.appendChild(utgDiv);
+    panel.appendChild(wrapper);
     
     const sBadge = document.getElementById("suspiciousBadge");
-    sBadge.textContent = suspiciousBookmarks.length; sBadge.style.display = "";
+    sBadge.textContent = suspiciousBookmarks.length;
+    sBadge.style.display = "";
 }
 
-function executeBatchSuspiciousLookup() {
-    if(oldBookmarkList.length === 0) return showToast("批量回溯失败！请先在右上方上传旧 HTML 文件", "error");
-    renderSuspiciousPanel();
-    showToast("交叉回溯对齐跑批完毕！", "success");
+function toggleGroup(hd) {
+    // 切换当前标题头以及直接相邻的 cmp-body 块
+    hd.classList.toggle("open");
+    const body = hd.nextElementSibling;
+    if (body) {
+        body.classList.toggle("open");
+    }
 }
 
-// ⚡ 批量自动修复勾选中的可疑项目
-function executeBatchAutoFixSuspicious() {
-    if(oldBookmarkList.length === 0) return showToast("批量自动修复失败！请在右上方先导入旧备份 HTML 档案", "error");
+function switchTab(name) {
+    document.querySelectorAll(".tab-bar .tab-btn").forEach(b => {
+        if(b.getAttribute('data-tab') === name) b.classList.add("active");
+        else b.classList.remove("active");
+    });
     
-    const checkedBoxes = document.querySelectorAll('input[name="suspiciousTraceCheckbox"]:checked');
-    if(checkedBoxes.length === 0) return showToast("请先勾选需要批量自动修复的可疑书签选项！", "warning");
-
-    let fixSuccessCount = 0;
-
-    checkedBoxes.forEach(cb => {
-        const uid = cb.dataset.id;
-        const sb = suspiciousBookmarks.find(b => b.id === uid);
-        if(!sb) return;
-
-        const coreName = cleanCoreName(sb.originalTitle);
-        if(!coreName) return;
-
-        const matches = [];
-        oldBookmarkList.forEach(ob => {
-            const score = calculateMatchScore({ title: coreName, url: "" }, ob, 'domain');
-            if (score >= 0.4) matches.push({ url: ob.url, score });
-        });
-
-        if (matches.length > 0) {
-            matches.sort((a, b) => b.score - a.score);
-            const bestUrl = matches[0].url;
-
-            const target = processedBookmarks.find(b => b.id === uid);
-            if (target) {
-                target.url = bestUrl;
-                target.title = target.title.replace(/\[可疑链接已删除\]/g, "").trim();
-                target.originalTitle = target.originalTitle.replace(/\[可疑链接已删除\]/g, "").trim();
-                target.isSuspicious = false;
-                fixSuccessCount++;
-            }
+    const tabs = ['preview', 'duplicates', 'compare', 'suspicious', 'deadlinks'];
+    tabs.forEach(t => {
+        const panel = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (panel) {
+            panel.style.display = (t === name) ? 'block' : 'none';
         }
     });
-
-    if(fixSuccessCount > 0) {
-        suspiciousBookmarks = processedBookmarks.filter(b => b.isSuspicious);
-        regenerateHtmlAndPanels();
-        runOptimizedComparison();
-        showToast(`⚡ 批量修复成功！已自动帮您复活了选中的 ${fixSuccessCount} 个条目，比对视图已全量刷新。`, "success");
-    } else {
-        showToast("选中的条目未能匹配到历史网址，请尝试单条人工填入。", "warning");
-        renderSuspiciousPanel();
-    }
 }
 
-function commitFixSuspiciousLink(uid, type) {
-    let finalUrl = "";
-    if (type === 'select') {
-        finalUrl = document.getElementById(`sel_url_${uid}`).value;
-    } else {
-        finalUrl = document.getElementById(`input_url_${uid}`).value.trim();
-        if (!finalUrl) return showToast("请输入有效的链接网址！", "warning");
-        if (!finalUrl.startsWith('http')) finalUrl = 'https://' + finalUrl;
-    }
-
-    const target = processedBookmarks.find(b => b.id === uid);
-    if (!target) return;
-
-    target.url = finalUrl;
-    target.title = target.title.replace(/\[可疑链接已删除\]/g, "").trim();
-    target.originalTitle = target.originalTitle.replace(/\[可疑链接已删除\]/g, "").trim();
-    target.isSuspicious = false;
-
-    suspiciousBookmarks = suspiciousBookmarks.filter(b => b.id !== uid);
-
-    regenerateHtmlAndPanels();
-    if (oldBookmarkList.length > 0) runOptimizedComparison();
-    showToast("节点填入修复成功！全栈比对视图已刷新。", "success");
-}
-
-/* ========== 分类预览视图编排 ========== */
-function renderPreview(categoryMap) {
-    let html = "";
-    for (const [cat, subs] of Object.entries(categoryMap)) {
-        html += '<div class="folder-hd"><i class="fas fa-folder-open mr-1.5"></i>' + escapeHtml(cat) + '</div>';
-        for (const [sub, items] of Object.entries(subs)) {
-            if (sub !== "其他" || Object.keys(subs).length > 1) {
-                html += '<div class="subfolder-hd"><i class="fas fa-folder mr-1 text-[11px]"></i>' + escapeHtml(sub) + '</div>';
-            }
-            items.forEach(item => {
-                const tagMatch = item.t.match(/\[(.+?)\]/);
-                const tag = tagMatch ? tagMatch[1] : "";
-                const baseTitle = item.t.replace(/\s*\[.+?\]/, "").replace(/\s*-\s*.+$/, "").trim();
-                
-                const targetObj = processedBookmarks.find(b => b.url === item.u);
-                const safeId = targetObj ? targetObj.id : "";
-
-                html += `
-                    <div class="bm-row" data-id="${safeId}">
-                        <div class="flex items-center gap-2 min-w-0 flex-1 mr-4">
-                            <i class="fas fa-link text-zinc-600 text-[10px] flex-shrink-0"></i>
-                            <span class="bm-title truncate">${escapeHtml(baseTitle)}</span>
-                            ${tag ? `<span class="bm-tag ${tag === "国内直连" ? "bm-tag-g" : "bm-tag-w"} whitespace-nowrap">${escapeHtml(tag)}</span>` : ''}
-                            <span class="text-[10px] font-mono text-zinc-600 truncate max-w-xs block ml-2">(${escapeHtml(item.u)})</span>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            <button class="edit-btn edit-btn-save px-1.5 py-0.5 text-[10px] whitespace-nowrap" onclick="manualEditBookmarkFieldByUid('${safeId}')">
-                                <i class="fas fa-pen-to-square text-[9px]"></i>改分类
-                            </button>
-                            <button class="edit-btn edit-btn-remove px-1.5 py-0.5 text-[10px] whitespace-nowrap" onclick="manualRemoveFromPreviewByUid('${safeId}')">
-                                <i class="fas fa-trash-can text-[9px]"></i>移除
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-    }
-    document.getElementById("previewPanel").innerHTML = html || `<div class="text-neutral-600 text-center py-8">暂无解析数据</div>`;
-}
-
-function manualRemoveFromPreviewByUid(uid) {
-    if (!uid) return;
-    const targetIdx = processedBookmarks.findIndex(b => b.id === uid);
-    if (targetIdx === -1) return;
-    const target = processedBookmarks[targetIdx];
-    if (!confirm(`确定要将书签 “${target.title}” 从当前合并夹中彻底删除吗？`)) return;
-
-    processedBookmarks.splice(targetIdx, 1);
-    deadBookmarks = deadBookmarks.filter(b => b.url !== target.url);
-    suspiciousBookmarks = suspiciousBookmarks.filter(b => b.id !== uid);
-
-    regenerateHtmlAndPanels();
-    if (oldBookmarkList.length > 0) runOptimizedComparison();
-    showToast("该书签已成功从当前有效数据库中彻底抹除！", "success");
-}
-
-function manualEditBookmarkFieldByUid(uid) {
-    if (!uid) return;
-    const target = processedBookmarks.find(b => b.id === uid);
-    if (!target) return;
-
-    const newCat = prompt("📝 请输入修正后的 【新大类】 名称:", target.cat); if (newCat === null) return; 
-    const newSub = prompt("📂 请输入修正后的 【新小类】 名称:", target.sub); if (newSub === null) return;
-    const newTitle = prompt("🏷️ 请输入修正后的 【网站标题】:", target.title); if (newTitle === null) return;
-
-    target.cat = newCat.trim() || "未分类";
-    target.sub = newSub.trim() || "其他";
-    target.title = newTitle.trim() || "未命名网站";
-    target.originalTitle = target.title;
-
-    regenerateHtmlAndPanels();
-    if (oldBookmarkList.length > 0) runOptimizedComparison();
-    showToast("成功完成分类群组更正重组！", "success");
-}
-
-/* ========== 手动比对面板调节流 ========== */
+/* ========== 全量同步接口补充维持 ========== */
 function manualRemoveMatch(newId, oldUrl) {
     let item = rawComparisonCache.matched.find(m => m.newId === newId);
     if (item) item.allMatches = item.allMatches.filter(om => om.old.url !== oldUrl);
@@ -1159,7 +969,7 @@ function manualAddToOld(title, url) {
 
 function resetDeadlinkTab() {
     deadBookmarks = []; document.getElementById("deadlinksBadge").style.display = "none";
-    document.getElementById("deadlinksListPanel").innerHTML = '<div class="empty"><i class="fas fa-bolt"></i><p>尚未激活网络状态检测，点击上方按钮一键开始探测</p></div>';
+    document.getElementById("deadlinksListPanel").innerHTML = '<div class="empty"><i class="fas fa-bolt"></i><p>尚未激活网络状态检测，点击一键探测</p></div>';
     document.getElementById("startCheckDeadBtn").disabled = false;
     document.getElementById("startCheckDeadBtn").textContent = "开始全量探测死链";
     document.getElementById("checkProgressText").classList.add("hidden");
@@ -1167,14 +977,14 @@ function resetDeadlinkTab() {
 }
 
 async function startDeadLinkCheck() {
-    if (processedBookmarks.length === 0) { showToast("缓冲区无测试数据", "warning"); return; }
+    if (processedBookmarks.length === 0) { showToast("规档包无测试数据", "warning"); return; }
     const btn = document.getElementById("startCheckDeadBtn");
     const progressText = document.getElementById("checkProgressText");
     const barContainer = document.getElementById("progressBarContainer");
     const barFill = document.getElementById("progressBarFill");
     
     btn.disabled = true; progressText.classList.remove("hidden"); barContainer.classList.remove("hidden");
-    document.getElementById("deadlinksListPanel").innerHTML = '<div class="empty text-sky-400"><i class="fas fa-circle-notch fa-spin"></i><p>连通性探测嗅探处理中...</p></div>';
+    document.getElementById("deadlinksListPanel").innerHTML = '<div class="empty text-sky-400"><i class="fas fa-circle-notch fa-spin"></i><p>连通性探测进行中...</p></div>';
     
     deadBookmarks = [];
     let total = processedBookmarks.length, checkedCount = 0, batchSize = 10;
@@ -1193,24 +1003,24 @@ async function startDeadLinkCheck() {
                 clearTimeout(timeoutId); checkedCount++;
                 let pct = Math.round((checkedCount / total) * 100);
                 barFill.style.width = pct + "%";
-                progressText.textContent = `嗅探进度: ${checkedCount}/${total} (${pct}%) - 已抓获死链: ${deadBookmarks.length}`;
+                progressText.textContent = `探测进度: ${checkedCount}/${total} (${pct}%) - 已识别死链: ${deadBookmarks.length}`;
             }
         }));
     }
-    progressText.textContent = `全量探测结束！共扫描 ${total} 条站点，抓获死链 ${deadBookmarks.length} 条`;
+    progressText.textContent = `全量探测结束！共扫描 ${total} 条站点，抓获故障死链 ${deadBookmarks.length} 条`;
     btn.textContent = "重新探测测活"; btn.disabled = false;
     renderDeadlinksView();
 }
 
 function deleteFromActiveBookmarks(url) {
-    if (!confirm("确定要将此网络超时/故障的僵尸节点从合并集合中彻底删除移除吗？")) return;
+    if (!confirm("确定要将此网络超时/故障的僵尸节点删除吗？")) return;
     processedBookmarks = processedBookmarks.filter(b => b.url !== url);
     deadBookmarks = deadBookmarks.filter(b => b.url !== url);
     suspiciousBookmarks = suspiciousBookmarks.filter(b => b.url !== url);
     regenerateHtmlAndPanels();
     renderDeadlinksView();
     if (oldBookmarkList.length > 0) runOptimizedComparison();
-    showToast("硬销毁僵尸节点成功", "success");
+    showToast("销毁僵尸节点成功", "success");
 }
 
 function renderDeadlinksView() {
@@ -1218,47 +1028,105 @@ function renderDeadlinksView() {
     const badge = document.getElementById("deadlinksBadge");
     badge.textContent = deadBookmarks.length; badge.style.display = deadBookmarks.length > 0 ? "" : "none";
     if (deadBookmarks.length === 0) {
-        listPanel.innerHTML = '<div class="empty text-emerald-400"><i class="fas fa-circle-check"></i><p>优秀！未扫描出连接故障的死链</p></div>';
+        listPanel.innerHTML = '<div class="empty text-emerald-400"><i class="fas fa-circle-check"></i><p>无物理故障死链</p></div>';
     } else {
         let html = '<div class="mb-2 text-xs text-rose-400"><i class="fas fa-circle-exclamation mr-1"></i>以下节点通信失败或建立连接超时：</div>';
         deadBookmarks.forEach((db, idx) => {
-            html += `<div class="list-row border-l-2 border-rose-500 bg-rose-950/10 py-2"><span class="text-zinc-600 text-xs min-w-[20px]">${idx+1}</span><div class="flex-1 min-w-0"><div class="font-bold text-zinc-300 text-xs truncate">${escapeHtml(db.title)}</div><span class="list-url text-rose-400 text-xs select-all block truncate">${escapeHtml(db.url)}</span></div><div class="flex items-center gap-2"><span class="text-xs px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 whitespace-nowrap">通信超时</span><button class="edit-btn edit-btn-remove px-2 py-1 text-xs whitespace-nowrap" onclick="deleteFromActiveBookmarks('${escapeHtml(db.url)}')"><i class="fas fa-trash-can"></i> 删除</button></div></div>`;
+            html += `<div class="list-row border-l-2 border-rose-500 bg-rose-950/10 py-2"><span class="text-zinc-600 text-xs min-w-[20px]">${idx+1}</span><div class="flex-1 min-w-0"><div class="font-bold text-zinc-300 text-xs truncate">${escapeHtml(db.title)}</div><span class="list-url text-rose-400 text-xs select-all block truncate">${escapeHtml(db.url)}</span></div><div class="flex items-center gap-2"><span class="text-xs px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 whitespace-nowrap">通信超时</span><button class="edit-btn edit-btn-remove px-2 py-1 text-xs whitespace-nowrap" data-url="${escapeHtml(db.url)}" onclick="deleteFromActiveBookmarks(this.dataset.url)"><i class="fas fa-trash-can"></i> 删除</button></div></div>`;
         });
         listPanel.innerHTML = html;
     }
 }
 
-// 优化后的精准弹性显隐机制
-function toggleGroup(hd) {
-    hd.classList.toggle("open"); 
-    const body = hd.nextElementSibling; 
-    if (body) {
-        body.classList.toggle("open");
-    }
+function renderStats(total, dupCount, catCount, suspiciousCount) {
+    document.getElementById("statsPanel").innerHTML = `
+        <div class="stat-grid">
+            <div class="stat-card"><div class="stat-val text-green-400">${total}</div><div class="stat-lbl">有效合并总数</div></div>
+            <div class="stat-card"><div class="stat-val text-rose-400">${dupCount}</div><div class="stat-lbl">去重滤除</div></div>
+            <div class="stat-card"><div class="stat-val text-amber-400">${catCount}</div><div class="stat-lbl">智能群组</div></div>
+            <div class="stat-card"><div class="stat-val text-orange-400">${suspiciousCount}</div><div class="stat-lbl">可疑空标志点</div></div>
+        </div>`;
 }
 
-/* ========== 全局增量多维切换控制底座 ========== */
-function switchTab(name) {
-    // 1. 物理顶端高亮切换
-    document.querySelectorAll(".tab-bar .tab-btn").forEach(b => {
-        if(b.getAttribute('data-tab') === name) b.classList.add("active");
-        else b.classList.remove("active");
+function renderDuplicates() {
+    const panel = document.getElementById("duplicatesPanel");
+    if (duplicateList.length === 0) {
+        panel.innerHTML = '<div class="empty"><i class="fas fa-check-circle"></i><p>没有检出多余的冗余重复网址</p></div>'; return;
+    }
+    let html = '<div class="mb-3 text-xs text-zinc-400"><i class="fas fa-info-circle mr-1 text-amber-400"></i>为了体积瘦身，以下重复网址仅保留最先出现的记录：</div><div class="scroll-y">';
+    duplicateList.forEach((d, i) => {
+        html += `<div class="list-row"><span class="text-zinc-600 text-xs min-w-[24px]">${i+1}</span><span class="list-url">${escapeHtml(d.url)}</span></div>`;
     });
-    
-    // 2. 局部视图无感安全切换（深度修正 GitHub 跨域沙箱可见性逻辑 Bug）
-    const tabs = ['preview', 'duplicates', 'compare', 'suspicious', 'deadlinks'];
-    tabs.forEach(t => {
-        const panel = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
-        if (panel) {
-            if (t === name) {
-                panel.style.display = 'block';
-                panel.classList.add('active');
-            } else {
-                panel.style.display = 'none';
-                panel.classList.remove('active');
+    panel.innerHTML = html + '</div>';
+}
+
+function executeBatchAutoFixSuspicious() {
+    if(oldBookmarkList.length === 0) return showToast("批量自动修复失败！请导入旧备份档案", "error");
+    const checkedBoxes = document.querySelectorAll('input[name="suspiciousTraceCheckbox"]:checked');
+    if(checkedBoxes.length === 0) return showToast("请先勾选需要批量自动修复的可疑书签选项！", "warning");
+
+    let fixSuccessCount = 0;
+    checkedBoxes.forEach(cb => {
+        const uid = cb.dataset.id;
+        const sb = suspiciousBookmarks.find(b => b.id === uid);
+        if(!sb) return;
+
+        const coreName = cleanCoreName(sb.originalTitle);
+        if(!coreName) return;
+
+        const matches = [];
+        oldBookmarkList.forEach(ob => {
+            const score = calculateMatchScore({ title: coreName, url: "" }, ob, 'domain');
+            if (score >= 0.4) matches.push({ url: ob.url, score });
+        });
+
+        if (matches.length > 0) {
+            matches.sort((a, b) => b.score - a.score);
+            const bestUrl = matches[0].url;
+            const target = processedBookmarks.find(b => b.id === uid);
+            if (target) {
+                target.url = bestUrl;
+                target.title = target.title.replace(/\[可疑链接已删除\]/g, "").trim();
+                target.originalTitle = target.originalTitle.replace(/\[可疑链接已删除\]/g, "").trim();
+                target.isSuspicious = false;
+                fixSuccessCount++;
             }
         }
     });
+
+    if(fixSuccessCount > 0) {
+        suspiciousBookmarks = processedBookmarks.filter(b => b.isSuspicious);
+        regenerateHtmlAndPanels();
+        runOptimizedComparison();
+        showToast(`⚡ 批量修复成功！已自动帮您复活了选中的 ${fixSuccessCount} 个条目。`, "success");
+    } else {
+        showToast("选中的条目未能精确匹配到历史网址。", "warning");
+        renderSuspiciousPanel();
+    }
+}
+
+function commitFixSuspiciousLink(uid, type) {
+    let finalUrl = "";
+    if (type === 'select') {
+        finalUrl = document.getElementById(`sel_url_${uid}`).value;
+    } else {
+        finalUrl = document.getElementById(`input_url_${uid}`).value.trim();
+        if (!finalUrl) return showToast("请输入有效的链接网址！", "warning");
+        if (!finalUrl.startsWith('http')) finalUrl = 'https://' + finalUrl;
+    }
+
+    const target = processedBookmarks.find(b => b.id === uid);
+    if (!target) return;
+
+    target.url = finalUrl;
+    target.title = target.title.replace(/\[可疑链接已删除\]/g, "").trim();
+    target.originalTitle = target.originalTitle.replace(/\[可疑链接已删除\]/g, "").trim();
+    target.isSuspicious = false;
+    suspiciousBookmarks = suspiciousBookmarks.filter(b => b.id !== uid);
+
+    regenerateHtmlAndPanels();
+    if (oldBookmarkList.length > 0) runOptimizedComparison();
+    showToast("节点填入修复成功！", "success");
 }
 
 function bindFileUploadEvents() {
@@ -1310,7 +1178,7 @@ function executeReadTextStream(file, type) {
 }
 
 function downloadResult() {
-    if (processedBookmarks.length === 0) return showToast("缓冲区空虚，请先执行导入与预览机制", "warning");
+    if (processedBookmarks.length === 0) return showToast("安排区无有效内容", "warning");
     const tree = {};
     processedBookmarks.forEach(b => {
         if(!tree[b.cat]) tree[b.cat] = {};
