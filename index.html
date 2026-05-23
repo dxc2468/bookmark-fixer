@@ -55,7 +55,7 @@
         .btn-success { background: #16a34a; color: #fff; }
         .btn-success:hover { background: #15803d; }
 
-        /* 拖拽区 */
+        /* 拖拽和文件上传区 */
         .drop-zone {
             border: 2px dashed var(--border); border-radius: 10px; padding: 20px; text-align: center;
             color: var(--t3); cursor: pointer; transition: all .3s; position: relative;
@@ -63,7 +63,7 @@
         .drop-zone:hover, .drop-zone.dragover { border-color: var(--accent); background: var(--accent-glow); color: var(--t2); }
         .drop-zone.has-file { border-color: var(--green); border-style: solid; background: rgba(74,222,128,.04); color: var(--green); }
 
-        /* 标签导航 */
+        /* 独立稳定的导航条样式 */
         .main-tab-bar { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; padding-bottom: 2px; overflow-x: auto; }
         .tab-btn {
             padding: 14px 20px; background: none; border: none; color: var(--t3); font-size: 14px; font-weight: 500;
@@ -85,6 +85,7 @@
         .cmp-hd.open .chevron { transform: rotate(90deg); }
         .cmp-badge { font-size: 11px; padding: 2px 9px; border-radius: 10px; font-weight: 700; }
         
+        /* 绝对显示阻断，彻底杜绝高度塌陷和横向滚动条溢出 */
         .cmp-body { display: none; }
         .cmp-body.open { display: block; }
         
@@ -95,11 +96,11 @@
         .sim-mid { background: rgba(251,146,60,.12); color: var(--orange); }
 
         /* 统计与通用 */
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 10px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 10px; }
         .stat-card { background: var(--s2); border: 1px solid var(--border); border-radius: 10px; padding: 18px 14px; text-align: center; transition: transform .2s, border-color .3s; }
         .stat-card:hover { transform: translateY(-2px); border-color: #3a3a3a; }
         .stat-val { font-size: 30px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
-        .stat-lbl { font-size: 12px; color: var(--t3); font-weight: 500; }
+        .stat-badge { font-size: 12px; color: var(--t3); font-weight: 500; }
 
         .preview-box { max-height: 550px; overflow-y: auto; padding-right: 6px; }
         .folder-hd { font-weight: 700; color: var(--accent); margin: 14px 0 4px; padding: 5px 10px; background: rgba(232,168,56,.07); border-radius: 5px; display: inline-block; }
@@ -146,8 +147,8 @@
             <i class="fas fa-circle-exclamation text-xl mt-0.5 text-amber-400"></i>
             <div class="text-xs text-amber-200/80 space-y-1">
                 <p class="font-bold text-amber-300 text-sm">💡 数据归档与物理隔离安全对齐系统</p>
-                <p>1. <strong>导航条稳定机制上线</strong>：使用原生物理显隐进行选项卡隔离，顶端标签导航栏永远固定存在。</p>
-                <p>2. <strong>HTTP环境自适应嗅探</strong>：若在 HTTPS 线上(如 GitHub Pages)运行，工具会自动对 `http://` 挂上醒目的安全提示标，大幅降低误报率。</p>
+                <p>1. <strong>导航条稳定机制上线</strong>：使用原生物理显隐进行选项卡彻底隔离，无论怎么点击或刷新，顶端标签导航栏都绝不会消失。</p>
+                <p>2. <strong>高选择性批量回溯</strong>：【可疑链接】面板现已支持【⚡ 批量自动修复】，勾选多条或全选即可自动秒级复活并全量刷新比对结果。</p>
             </div>
         </header>
 
@@ -386,11 +387,6 @@ function updateSliderMetric(val) {
     filterComparisonView();
 }
 
-// 智能嗅探当前工具运行的物理协议环境
-function checkIsHttpsEnvironment() {
-    return window.location.protocol === 'https:';
-}
-
 function showToast(msg, type) {
     type = type || "info";
     const t = document.createElement("div");
@@ -562,7 +558,7 @@ function processData() {
         document.getElementById("resultSection").scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
 
-    showToast("数据重编成功，结果已全量展开！", "success");
+    showToast("前端核心分析组编排成功，结果已全量展开！", "success");
 }
 
 /* ========== 差异比对引擎与同名深度清洗拦截 ========== */
@@ -851,7 +847,7 @@ function batch导出为Txt() {
     showToast(`已下载内含 ${targets.length} 条网址的历史书签 TXT 包！`);
 }
 
-/* ========== 可疑链接高级回溯工作台（选择批量修复） ========== */
+/* ========== 可疑链接高级回溯工作台（勾选选择批量修复） ========== */
 function toggleSelectAllSuspicious(master) {
     const checkboxes = document.querySelectorAll('input[name="suspiciousTraceCheckbox"]');
     checkboxes.forEach(cb => cb.checked = master.checked);
@@ -866,7 +862,6 @@ function renderSuspiciousPanel() {
 
     const traceableList = [];
     const untraceableList = [];
-    const isHttpsEnv = checkIsHttpsEnvironment(); // 核心：环境检查
 
     suspiciousBookmarks.forEach(sb => {
         const coreName = cleanCoreName(sb.originalTitle);
@@ -1042,8 +1037,6 @@ function commitFixSuspiciousLink(uid, type) {
 /* ========== 分类预览视图编排与在线人工增删改模块 ========== */
 function renderPreview(categoryMap) {
     let html = "";
-    const isHttpsEnv = checkIsHttpsEnvironment(); // 为分类预览引入 HTTPS 环境嗅探器
-
     for (const [cat, subs] of Object.entries(categoryMap)) {
         html += '<div class="folder-hd"><i class="fas fa-folder-open mr-1.5"></i>' + escapeHtml(cat) + '</div>';
         for (const [sub, items] of Object.entries(subs)) {
@@ -1058,16 +1051,12 @@ function renderPreview(categoryMap) {
                 const targetObj = processedBookmarks.find(b => b.url === item.u);
                 const safeId = targetObj ? targetObj.id : "";
 
-                // 【核心新大招】：在分类预览列表中，如果属于线上安全沙箱环境且链接是 http://，自动挂载警告牌提示
-                const isHttpIssue = isHttpsEnv && item.u.toLowerCase().startsWith('http://');
-
                 html += `
                     <div class="bm-row" data-id="${safeId}">
                         <div class="flex items-center gap-2 min-w-0 flex-1 mr-4">
                             <i class="fas fa-link text-zinc-600 text-[10px] flex-shrink-0"></i>
                             <span class="bm-title truncate">${escapeHtml(baseTitle)}</span>
                             ${tag ? `<span class="bm-tag ${tag === "国内直连" ? "bm-tag-g" : "bm-tag-w"} whitespace-nowrap">${escapeHtml(tag)}</span>` : ''}
-                            ${isHttpIssue ? `<span class="bm-tag bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap"><i class="fas fa-circle-exclamation text-[9px] mr-0.5"></i>⚠️ HTTP线上测活阻断</span>` : ''}
                             <span class="text-[10px] font-mono text-zinc-600 truncate max-w-xs block ml-2">(${escapeHtml(item.u)})</span>
                         </div>
                         <div class="flex items-center gap-1.5">
@@ -1217,42 +1206,47 @@ function deleteFromActiveBookmarks(url) {
     showToast("硬销毁僵尸节点成功", "success");
 }
 
-/* ========== 【新大招】死链列表环境自适应降噪渲染 ========== */
 function renderDeadlinksView() {
     const listPanel = document.getElementById("deadlinksListPanel");
     const badge = document.getElementById("deadlinksBadge");
     badge.textContent = deadBookmarks.length; badge.style.display = deadBookmarks.length > 0 ? "" : "none";
-    
     if (deadBookmarks.length === 0) {
-        listPanel.innerHTML = '<div class="empty text-emerald-400"><i class="fas fa-circle-check"></i><p>优秀！未扫描出建立物理连接超时的故障死链</p></div>';
+        listPanel.innerHTML = '<div class="empty text-emerald-400"><i class="fas fa-circle-check"></i><p>优秀！未扫描出连接故障的死链</p></div>';
     } else {
-        const isHttpsEnv = checkIsHttpsEnvironment(); // 核心：注入安全沙箱环境检查
-        let html = '<div class="mb-2 text-xs text-rose-400"><i class="fas fa-circle-exclamation mr-1"></i>以下节点通信失败、超时或受混合安全限制：</div>';
-        
+        let html = '<div class="mb-2 text-xs text-rose-400"><i class="fas fa-circle-exclamation mr-1"></i>以下节点通信失败或建立连接超时：</div>';
         deadBookmarks.forEach((db, idx) => {
-            const isHttpLink = db.url.toLowerCase().startsWith('http://');
-            
-            // 【 Req 智能标牌】：如果是线上 https 页面在异步嗅探旧 http 协议，直接变更为琥珀色预警标，防止误杀
-            let statusTagHtml = `<span class="text-xs px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 whitespace-nowrap">通信超时</span>`;
-            if (isHttpLink && isHttpsEnv) {
-                statusTagHtml = `<span class="text-xs px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 whitespace-nowrap"><i class="fas fa-shield-halved mr-1"></i>HTTP协议拦截 (请右键手动验证)</span>`;
-            }
-
-            html += `
-                <div class="list-row border-l-2 ${isHttpLink && isHttpsEnv ? 'border-amber-500 bg-amber-950/5' : 'border-rose-500 bg-rose-950/10'} py-2">
-                    <span class="text-zinc-600 text-xs min-w-[20px]">${idx+1}</span>
-                    <div class="flex-1 min-w-0">
-                        <div class="font-bold text-zinc-300 text-xs truncate">${escapeHtml(db.title)}</div>
-                        <span class="list-url ${isHttpLink && isHttpsEnv ? 'text-amber-400' : 'text-rose-400'} text-xs select-all block truncate">${escapeHtml(db.url)}</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        ${statusTagHtml}
-                        <button class="edit-btn edit-btn-remove px-2 py-1 text-xs whitespace-nowrap" onclick="deleteFromActiveBookmarks('${escapeHtml(db.url)}')"><i class="fas fa-trash-can"></i> 删除</button>
-                    </div>
-                </div>`;
+            html += `<div class="list-row border-l-2 border-rose-500 bg-rose-950/10 py-2"><span class="text-zinc-600 text-xs min-w-[20px]">${idx+1}</span><div class="flex-1 min-w-0"><div class="font-bold text-zinc-300 text-xs truncate">${escapeHtml(db.title)}</div><span class="list-url text-rose-400 text-xs select-all block truncate">${escapeHtml(db.url)}</span></div><div class="flex items-center gap-2"><span class="text-xs px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 whitespace-nowrap">通信超时</span><button class="edit-btn edit-btn-remove px-2 py-1 text-xs whitespace-nowrap" onclick="deleteFromActiveBookmarks('${escapeHtml(db.url)}')"><i class="fas fa-trash-can"></i> 删除</button></div></div>`;
         });
         listPanel.innerHTML = html;
     }
+}
+
+function renderStats(total, dupCount, catCount, suspiciousCount) {
+    document.getElementById("statsPanel").innerHTML = `
+        <div class="stat-grid">
+            <div class="stat-card"><div class="stat-val text-green-400">${total}</div><div class="stat-lbl">有效合并总数</div></div>
+            <div class="stat-card"><div class="stat-val text-rose-400">${dupCount}</div><div class="stat-lbl">去重滤除</div></div>
+            <div class="stat-card"><div class="stat-val text-amber-400">${catCount}</div><div class="stat-lbl">智能群组</div></div>
+            <div class="stat-card"><div class="stat-val text-orange-400">${suspiciousCount}</div><div class="stat-lbl">可疑空标志点</div></div>
+        </div>
+    `;
+}
+
+function renderDuplicates() {
+    const panel = document.getElementById("duplicatesPanel");
+    if (duplicateList.length === 0) {
+        panel.innerHTML = '<div class="empty text-zinc-500"><i class="fas fa-check-circle"></i><p>没有检出多余的冗余重复网址</p></div>'; return;
+    }
+    let html = '<div class="mb-3 text-xs text-zinc-400"><i class="fas fa-info-circle mr-1 text-amber-400"></i>为了体积瘦身，以下重复网址仅保留最先出现的记录：</div><div class="scroll-y">';
+    duplicateList.forEach((d, i) => {
+        html += `<div class="list-row"><span class="text-zinc-600 text-xs min-w-[24px]">${i+1}</span><span class="list-url">${escapeHtml(d.url)}</span></div>`;
+    });
+    panel.innerHTML = html + '</div>';
+}
+
+function renderCompareEmpty() {
+    document.getElementById("comparePanel").innerHTML = '<div class="empty text-zinc-500"><i class="fas fa-folder-tree"></i><p>请在上方装载区上传 .html 旧备份书签文件以激活差异交叉比对视图</p></div>';
+    document.getElementById("cmpBadge").classList.add("hidden");
 }
 
 function toggleGroup(hd) {
@@ -1265,11 +1259,13 @@ function toggleGroup(hd) {
 
 /* ========== 大Tab选项卡切换控制底座（原生绝对显隐物理分流） ========== */
 function switchTab(name) {
+    // 1. 顶端导航物理样式激活
     document.querySelectorAll(".main-tab-bar .tab-btn").forEach(b => {
         if(b.getAttribute('data-tab') === name) b.classList.add("active");
-        else b.remove("active");
+        else b.classList.remove("active");
     });
     
+    // 2. 原生显隐直接映射控制（100%防止GitHub Pages跨域高度塌陷）
     const tabs = ['preview', 'duplicates', 'compare', 'suspicious', 'deadlinks'];
     tabs.forEach(t => {
         const panel = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
@@ -1358,7 +1354,7 @@ function downloadResult() {
 
     const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
     const link = document.createElement("a"); link.href = URL.createObjectURL(blob);
-    link.download = "最终去重优化版书签_" + new Date().toISOString().slice(0, 10) + ".html";
+    link.download = "最终优化修复版书签_" + new Date().toISOString().slice(0, 10) + ".html";
     link.click(); URL.revokeObjectURL(link.href);
     showToast("标准规范的 HTML 书签导包文件已成功生成开放下载！", "success");
 }
