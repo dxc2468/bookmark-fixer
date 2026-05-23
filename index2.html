@@ -470,7 +470,100 @@
             document.getElementById("checkProgressText").textContent=`完成，发现 ${deadBookmarks.length} 个死链`; btn.disabled=false;btn.textContent="重新检测"; renderDeadlinksView();
         }
         function deleteFromActiveBookmarks(url){ showModal('确认删除','确定要删除该链接吗？',[{text:'取消',value:false,cls:'modal-btn-cancel'},{text:'删除',value:true,cls:'modal-btn-confirm'}]).then(ok=>{if(ok){ const bm=processedBookmarks.find(b=>b.url===url); if(bm){ processedBookmarks=processedBookmarks.filter(b=>b.url!==url); deletedBookmarks.push(bm); deadBookmarks=deadBookmarks.filter(b=>b.url!==url); suspiciousBookmarks=suspiciousBookmarks.filter(b=>b.url!==url); regenerateHtmlAndPanels();renderDeadlinksView();renderTrashPanel();if(oldBookmarkList.length)runOptimizedComparison();showToast("已移入回收站","success"); } }}); }
-        function renderDeadlinksView(){ const panel=document.getElementById("deadlinksListPanel"); document.getElementById("deadlinksBadge").textContent=deadBookmarks.length; if(!deadBookmarks.length){panel.innerHTML='<div class="empty text-emerald-400"><p>未发现死链</p></div>';return;} let h='<div class="text-xs text-rose-400 mb-2">以下链接无法连接：</div>'; deadBookmarks.forEach((db,idx)=>{ const isHttp=db.url.startsWith('http://'); h+='<div class="list-row border-l-2 border-rose-500"><span class="text-zinc-600 w-6">'+(idx+1)+'</span><div class="flex-1"><div class="font-bold text-xs">'+escapeHtml(db.title)+(isHttp?' <span class="bm-tag-http">⚠️ HTTP</span>':'')+'</div><span class="list-url text-rose-400">'+escapeHtml(db.url)+'</span></div><button class="edit-btn edit-btn-remove" data-url="'+escapeHtml(db.url)+'" onclick="deleteFromActiveBookmarks(this.dataset.url)">删除</button></div>'; }); panel.innerHTML=h; }
+        function renderDeadlinksView() {
+    const panel = document.getElementById("deadlinksListPanel");
+    const badge = document.getElementById("deadlinksBadge");
+    badge.textContent = deadBookmarks.length;
+    badge.style.display = deadBookmarks.length ? "" : "none";
+
+    if (!deadBookmarks.length) {
+        panel.innerHTML = '<div class="empty text-emerald-400"><p>未发现死链</p></div>';
+        return;
+    }
+
+    let html = '';
+    // 操作栏
+    html += '<div class="flex items-center justify-between bg-zinc-950/80 p-2.5 rounded-lg border border-zinc-800 text-xs mb-3">';
+    html += '<label class="flex items-center gap-2 cursor-pointer text-neutral-400 hover:text-white">';
+    html += '<input type="checkbox" id="selectAllDeadlinksCheckbox" class="w-3.5 h-3.5 accent-amber-500 cursor-pointer" onchange="toggleSelectAllDeadlinks(this)">';
+    html += '<span>全选 / 反选全部</span>';
+    html += '</label>';
+    html += '<div class="flex gap-2">';
+    html += '<button class="edit-btn edit-btn-save py-1.5 px-3" onclick="openAllDeadlinks()"><i class="fas fa-external-link-alt"></i> 一键打开全部</button>';
+    html += '<button class="edit-btn edit-btn-remove py-1.5 px-3" onclick="batchDeleteDeadlinks()"><i class="fas fa-trash-can"></i> 批量删除选中</button>';
+    html += '</div>';
+    html += '</div>';
+
+    // 列表项
+    html += '<div class="text-xs text-rose-400 mb-2">以下链接无法连接：</div>';
+    deadBookmarks.forEach((db, idx) => {
+        const isHttp = db.url.startsWith('http://');
+        html += '<div class="list-row border-l-2 border-rose-500">';
+        html += '<input type="checkbox" name="deadlinkCheckbox" data-url="' + escapeHtml(db.url) + '" class="w-3.5 h-3.5 accent-amber-500 cursor-pointer mr-2">';
+        html += '<span class="text-zinc-600 w-6">' + (idx + 1) + '</span>';
+        html += '<div class="flex-1"><div class="font-bold text-xs">' + escapeHtml(db.title) + (isHttp ? ' <span class="bm-tag-http">⚠️ HTTP</span>' : '') + '</div>';
+        html += '<span class="list-url text-rose-400">' + escapeHtml(db.url) + '</span></div>';
+        html += '<button class="edit-btn edit-btn-remove" data-url="' + escapeHtml(db.url) + '" onclick="deleteFromActiveBookmarks(this.dataset.url)">删除</button>';
+        html += '</div>';
+    });
+
+    panel.innerHTML = html;
+}
+
+        // 全选/反选死链复选框
+function toggleSelectAllDeadlinks(master) {
+    const checkboxes = document.querySelectorAll('input[name="deadlinkCheckbox"]');
+    checkboxes.forEach(cb => cb.checked = master.checked);
+}
+
+// 一键打开所有死链（跳过 about:blank 链接）
+function openAllDeadlinks() {
+    const urls = deadBookmarks.map(db => db.url).filter(u => !u.startsWith('about:blank'));
+    if (urls.length === 0) {
+        showToast("没有可打开的链接", "warning");
+        return;
+    }
+    // 提示用户允许弹窗
+    showToast(`正在尝试打开 ${urls.length} 个链接，若被浏览器阻止请允许弹窗`, "info");
+    urls.forEach(u => {
+        window.open(u, '_blank', 'noopener,noreferrer');
+    });
+}
+
+// 批量删除选中的死链
+function batchDeleteDeadlinks() {
+    const checkedBoxes = document.querySelectorAll('input[name="deadlinkCheckbox"]:checked');
+    if (checkedBoxes.length === 0) {
+        showToast("请至少选择一个死链", "warning");
+        return;
+    }
+    showModal('批量删除死链', `确认将选中的 ${checkedBoxes.length} 个死链移入回收站吗？`, [
+        { text: '取消', value: false, cls: 'modal-btn-cancel' },
+        { text: '删除', value: true, cls: 'modal-btn-confirm' }
+    ]).then(confirmed => {
+        if (!confirmed) return;
+
+        const urlsToDelete = new Set();
+        checkedBoxes.forEach(cb => urlsToDelete.add(cb.dataset.url));
+
+        // 批量处理：移入回收站并从 active 和 dead 列表中移除
+        urlsToDelete.forEach(url => {
+            const bm = processedBookmarks.find(b => b.url === url);
+            if (bm) {
+                processedBookmarks = processedBookmarks.filter(b => b.url !== url);
+                deletedBookmarks.push(bm);
+            }
+            deadBookmarks = deadBookmarks.filter(db => db.url !== url);
+            // 同时清理可疑链接列表（如果存在）
+            suspiciousBookmarks = suspiciousBookmarks.filter(b => b.url !== url);
+        });
+
+        regenerateHtmlAndPanels();
+        renderDeadlinksView();
+        renderTrashPanel();
+        showToast(`已将 ${urlsToDelete.size} 个死链移入回收站`, "success");
+    });
+}
 
         function manualEditBookmarkFieldByUid(uid){ const target=processedBookmarks.find(b=>b.id===uid); if(!target)return; const content='<label class="block text-xs mb-1">大类</label><input id="editCat" class="modal-input" value="'+escapeHtml(target.cat)+'"><label class="block text-xs mb-1">小类</label><input id="editSub" class="modal-input" value="'+escapeHtml(target.sub)+'"><label class="block text-xs mb-1">标题</label><input id="editTitle" class="modal-input" value="'+escapeHtml(target.title)+'">'; showModal('修改书签分类',content,[{text:'取消',value:false,cls:'modal-btn-cancel'},{text:'保存',value:true,cls:'modal-btn-confirm'}]).then(ok=>{if(ok){target.cat=document.getElementById('editCat').value.trim()||"未分类";target.sub=document.getElementById('editSub').value.trim()||"其他";target.title=document.getElementById('editTitle').value.trim()||"未命名";target.originalTitle=target.title;regenerateHtmlAndPanels();if(oldBookmarkList.length)runOptimizedComparison();showToast("分类已更新","success");}}); }
 
