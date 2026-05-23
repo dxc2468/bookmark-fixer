@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>书签终极修复与智能工具 Pro</title>
-    <script src="https://cdn.tailwindcss.com">
-    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script>
@@ -980,13 +979,13 @@
         function renderComparisonHTML(matched, onlyInNew, onlyInOld) {
             let html = '<div class="scroll-y space-y-4">';
             // 匹配组
-            html += `<div class="cmp-group"><div class="cmp-hd" onclick="toggleGroup(this)"><i class="fas fa-chevron-right chevron"></i><i class="fas fa-link text-green-400"></i>已匹配 <span class="cmp-badge ml-auto bg-green-500/10 text-green-400">${matched.length}</span></div><div class="cmp-body">`;
+            html += '<div class="cmp-group"><div class="cmp-hd" onclick="toggleGroup(this)"><i class="fas fa-chevron-right chevron"></i><i class="fas fa-link text-green-400"></i>已匹配 <span class="cmp-badge ml-auto bg-green-500/10 text-green-400">' + matched.length + '</span></div><div class="cmp-body">';
             matched.forEach(m => {
-                html += `<div class="cmp-item"><div class="flex-1"><span class="text-zinc-200 font-bold">${escapeHtml(m.newTitle)}</span><div class="font-mono text-amber-400 text-xs">${escapeHtml(m.newUrl)}</div></div><button class="edit-btn edit-btn-save" onclick="manualAddMatch('${m.newId}')">追加绑定</button></div>`;
+                html += '<div class="cmp-item"><div class="flex-1"><span class="text-zinc-200 font-bold">' + escapeHtml(m.newTitle) + '</span><div class="font-mono text-amber-400 text-xs">' + escapeHtml(m.newUrl) + '</div></div><button class="edit-btn edit-btn-save" onclick="manualAddMatch(\'' + m.newId + '\')">追加绑定</button></div>';
                 if (m.oldMatches.length) {
                     html += '<div class="pl-4 space-y-2">';
                     m.oldMatches.forEach(om => {
-                        html += `<div class="flex justify-between items-center bg-zinc-950 p-2 rounded"><div><span class="text-zinc-300">${escapeHtml(om.old.title)}</span><span class="text-zinc-500 text-xs ml-2">${escapeHtml(om.old.url)}</span></div><div class="flex gap-2"><span class="sim-tag sim-mid">${Math.round(om.score*100)}%</span><button class="edit-btn edit-btn-remove" data-newid="${m.newId}" data-oldurl="${escapeHtml(om.old.url)}" onclick="manualRemoveMatch(this.dataset.newid, this.dataset.oldurl)">解除</button></div></div>`;
+                        html += '<div class="flex justify-between items-center bg-zinc-950 p-2 rounded"><div><span class="text-zinc-300">' + escapeHtml(om.old.title) + '</span><span class="text-zinc-500 text-xs ml-2">' + escapeHtml(om.old.url) + '</span></div><div class="flex gap-2"><span class="sim-tag sim-mid">' + Math.round(om.score*100) + '%</span><button class="edit-btn edit-btn-remove" data-newid="' + m.newId + '" data-oldurl="' + escapeHtml(om.old.url) + '" onclick="manualRemoveMatch(this.dataset.newid, this.dataset.oldurl)">解除</button></div></div>';
                     });
                     html += '</div>';
                 }
@@ -994,19 +993,19 @@
             html += '</div></div>';
 
             // 旧独有
-            html += `<div class="cmp-group"><div class="cmp-hd" onclick="toggleGroup(this)"><i class="fas fa-chevron-right chevron"></i><i class="fas fa-circle-minus text-rose-400"></i>旧备份独有 <span class="cmp-badge ml-auto bg-rose-500/10 text-rose-400">${onlyInOld.length}</span></div><div class="cmp-body">`;
+            html += '<div class="cmp-group"><div class="cmp-hd" onclick="toggleGroup(this)"><i class="fas fa-chevron-right chevron"></i><i class="fas fa-circle-minus text-rose-400"></i>旧备份独有 <span class="cmp-badge ml-auto bg-rose-500/10 text-rose-400">' + onlyInOld.length + '</span></div><div class="cmp-body">';
             if (onlyInOld.length) {
-                html += `<div class="flex justify-between items-center p-2 bg-zinc-950"><label class="text-xs"><input type="checkbox" id="selectAllOldCheckbox" onchange="toggleSelectAllOld(this)"> 全选</label><button class="edit-btn edit-btn-add" onclick="batchRecoverToNew()">批量挽回</button><button class="edit-btn edit-btn-save" onclick="batchExportTxt()">导出TXT</button></div>`;
+                html += '<div class="flex justify-between items-center p-2 bg-zinc-950"><label class="text-xs"><input type="checkbox" id="selectAllOldCheckbox" onchange="toggleSelectAllOld(this)"> 全选</label><button class="edit-btn edit-btn-add" onclick="batchRecoverToNew()">批量挽回</button><button class="edit-btn edit-btn-save" onclick="batchExportTxt()">导出TXT</button></div>';
             }
-            onlyInOld.forEach((ob,idx) => {
-                html += `<div class="flex items-center justify-between p-2"><input type="checkbox" name="oldUniqueCheckbox" data-title="${escapeHtml(ob.title)}" data-url="${escapeHtml(ob.url)}"><div class="flex-1 ml-2"><span class="text-zinc-300">${escapeHtml(ob.title)}</span><span class="text-zinc-500 text-xs ml-2">${escapeHtml(ob.url)}</span></div><button class="edit-btn edit-btn-add" data-title="${escapeHtml(ob.title)}" data-url="${escapeHtml(ob.url)}" onclick="manualAddToNew(this.dataset.title, this.dataset.url)">挽回</button></div>`;
+            onlyInOld.forEach((ob) => {
+                html += '<div class="flex items-center justify-between p-2"><input type="checkbox" name="oldUniqueCheckbox" data-title="' + escapeHtml(ob.title) + '" data-url="' + escapeHtml(ob.url) + '"><div class="flex-1 ml-2"><span class="text-zinc-300">' + escapeHtml(ob.title) + '</span><span class="text-zinc-500 text-xs ml-2">' + escapeHtml(ob.url) + '</span></div><button class="edit-btn edit-btn-add" data-title="' + escapeHtml(ob.title) + '" data-url="' + escapeHtml(ob.url) + '" onclick="manualAddToNew(this.dataset.title, this.dataset.url)">挽回</button></div>';
             });
             html += '</div></div>';
 
             // 新独有
-            html += `<div class="cmp-group"><div class="cmp-hd" onclick="toggleGroup(this)"><i class="fas fa-chevron-right chevron"></i><i class="fas fa-circle-plus text-sky-400"></i>当前新增 <span class="cmp-badge ml-auto bg-sky-500/10 text-sky-400">${onlyInNew.length}</span></div><div class="cmp-body">`;
+            html += '<div class="cmp-group"><div class="cmp-hd" onclick="toggleGroup(this)"><i class="fas fa-chevron-right chevron"></i><i class="fas fa-circle-plus text-sky-400"></i>当前新增 <span class="cmp-badge ml-auto bg-sky-500/10 text-sky-400">' + onlyInNew.length + '</span></div><div class="cmp-body">';
             onlyInNew.forEach(nb => {
-                html += `<div class="flex justify-between p-2"><div><span class="text-zinc-300">${escapeHtml(nb.title)}</span><span class="text-zinc-500 text-xs ml-2">${escapeHtml(nb.url)}</span></div><button class="edit-btn edit-btn-save" data-title="${escapeHtml(nb.title)}" data-url="${escapeHtml(nb.url)}" onclick="manualAddToOld(this.dataset.title, this.dataset.url)">备份到旧档</button></div>`;
+                html += '<div class="flex justify-between p-2"><div><span class="text-zinc-300">' + escapeHtml(nb.title) + '</span><span class="text-zinc-500 text-xs ml-2">' + escapeHtml(nb.url) + '</span></div><button class="edit-btn edit-btn-save" data-title="' + escapeHtml(nb.title) + '" data-url="' + escapeHtml(nb.url) + '" onclick="manualAddToOld(this.dataset.title, this.dataset.url)">备份到旧档</button></div>';
             });
             html += '</div></div></div>';
             document.getElementById("comparePanel").innerHTML = html;
@@ -1046,17 +1045,21 @@
                 (matches.length ? traceable : untraceable).push({ item: sb, matches });
             });
             let html = '<div class="scroll-y space-y-4">';
-            html += `<div class="bg-zinc-900 p-3 rounded"><h4 class="text-emerald-400 font-bold text-xs">可追溯 (${traceable.length})</h4>`;
+            html += '<div class="bg-zinc-900 p-3 rounded"><h4 class="text-emerald-400 font-bold text-xs">可追溯 (' + traceable.length + ')</h4>';
             traceable.forEach(t => {
-                html += `<div class="flex items-center justify-between mt-2"><input type="checkbox" name="suspiciousTraceCheckbox" data-id="${t.item.id}"><div class="flex-1 ml-2"><span class="text-zinc-300">${escapeHtml(t.item.originalTitle)}</span>`;
-                html += `<select id="sel_url_${t.item.id}" class="bg-zinc-800 text-xs ml-2">${t.matches.map(m => `<option value="${escapeHtml(m.url)}">${escapeHtml(m.title)} (${Math.round(m.score*100)}%)</option>`).join('')}</select></div>`;
-                html += `<button class="edit-btn edit-btn-add" onclick="commitFixSuspiciousLink('${t.item.id}','select')">修复</button></div>`;
+                html += '<div class="flex items-center justify-between mt-2"><input type="checkbox" name="suspiciousTraceCheckbox" data-id="' + t.item.id + '"><div class="flex-1 ml-2"><span class="text-zinc-300">' + escapeHtml(t.item.originalTitle) + '</span>';
+                html += '<select id="sel_url_' + t.item.id + '" class="bg-zinc-800 text-xs ml-2">';
+                t.matches.forEach(m => {
+                    html += '<option value="' + escapeHtml(m.url) + '">' + escapeHtml(m.title) + ' (' + Math.round(m.score*100) + '%)</option>';
+                });
+                html += '</select></div>';
+                html += '<button class="edit-btn edit-btn-add" onclick="commitFixSuspiciousLink(\'' + t.item.id + '\',\'select\')">修复</button></div>';
             });
             html += '</div>';
-            html += `<div class="bg-zinc-900 p-3 rounded"><h4 class="text-orange-400 font-bold text-xs">待手动输入 (${untraceable.length})</h4>`;
+            html += '<div class="bg-zinc-900 p-3 rounded"><h4 class="text-orange-400 font-bold text-xs">待手动输入 (' + untraceable.length + ')</h4>';
             untraceable.forEach(sb => {
-                html += `<div class="flex items-center justify-between mt-2"><div class="flex-1"><span class="text-zinc-300">${escapeHtml(sb.originalTitle)}</span><input id="input_url_${sb.id}" class="bg-zinc-800 text-xs ml-2 w-64" placeholder="https://"></div>`;
-                html += `<button class="edit-btn edit-btn-save" onclick="commitFixSuspiciousLink('${sb.id}','input')">填入</button></div>`;
+                html += '<div class="flex items-center justify-between mt-2"><div class="flex-1"><span class="text-zinc-300">' + escapeHtml(sb.originalTitle) + '</span><input id="input_url_' + sb.id + '" class="bg-zinc-800 text-xs ml-2 w-64" placeholder="https://"></div>';
+                html += '<button class="edit-btn edit-btn-save" onclick="commitFixSuspiciousLink(\'' + sb.id + '\',\'input\')">填入</button></div>';
             });
             html += '</div></div>';
             panel.innerHTML = html;
@@ -1081,7 +1084,7 @@
             regenerateHtmlAndPanels(); runOptimizedComparison(); showToast(`已修复 ${fixed} 条`,"success");
         }
         function commitFixSuspiciousLink(uid, type) {
-            let url = type==='select' ? document.getElementById(`sel_url_${uid}`).value : document.getElementById(`input_url_${uid}`).value.trim();
+            let url = type==='select' ? document.getElementById('sel_url_' + uid).value : document.getElementById('input_url_' + uid).value.trim();
             if (!url) return showToast("请输入网址","warning"); if (!url.startsWith('http')) url = 'https://'+url;
             const target = processedBookmarks.find(b=>b.id===uid); if(!target) return;
             target.url = url; target.title = target.title.replace(/\[可疑链接已删除\]/g,"").trim(); target.originalTitle = target.originalTitle.replace(/\[可疑链接已删除\]/g,"").trim(); target.isSuspicious = false;
@@ -1102,19 +1105,17 @@
                         const baseTitle = item.t.replace(/\s*\[.+?\]/g, "").replace(/\s*-\s*.+$/, "").trim();
                         const warningTag = (item.t.match(/\[(国内直连|需翻墙|访问慢)\]/) || [])[1] || "";
                         const isHttp = item.u.startsWith('http://');
-                        html += `
-                            <div class="bm-row" data-id="${safeId}">
-                                <div class="flex items-center gap-2 min-w-0 flex-1">
-                                    <span class="bm-title truncate">${escapeHtml(baseTitle)}</span>
-                                    ${warningTag ? `<span class="bm-tag ${warningTag==='国内直连'?'bm-tag-g':'bm-tag-w'}">${escapeHtml(warningTag)}</span>` : ''}
-                                    ${isHttp ? '<span class="bm-tag-http" title="旧版HTTP网站，测活可能受限，建议手动点击验证">⚠️ HTTP</span>' : ''}
-                                    <span class="text-[10px] text-zinc-600 truncate ml-2">(${escapeHtml(item.u)})</span>
-                                </div>
-                                <div class="flex gap-1">
-                                    <button class="edit-btn edit-btn-save text-[10px]" onclick="manualEditBookmarkFieldByUid('${safeId}')">改分类</button>
-                                    <button class="edit-btn edit-btn-remove text-[10px]" onclick="moveToTrash('${safeId}')">移除</button>
-                                </div>
-                            </div>`;
+                        html += '<div class="bm-row" data-id="' + safeId + '">';
+                        html += '<div class="flex items-center gap-2 min-w-0 flex-1">';
+                        html += '<span class="bm-title truncate">' + escapeHtml(baseTitle) + '</span>';
+                        if (warningTag) html += '<span class="bm-tag ' + (warningTag==='国内直连'?'bm-tag-g':'bm-tag-w') + '">' + escapeHtml(warningTag) + '</span>';
+                        if (isHttp) html += '<span class="bm-tag-http" title="旧版HTTP网站，测活可能受限，建议手动点击验证">⚠️ HTTP</span>';
+                        html += '<span class="text-[10px] text-zinc-600 truncate ml-2">(' + escapeHtml(item.u) + ')</span>';
+                        html += '</div>';
+                        html += '<div class="flex gap-1">';
+                        html += '<button class="edit-btn edit-btn-save text-[10px]" onclick="manualEditBookmarkFieldByUid(\'' + safeId + '\')">改分类</button>';
+                        html += '<button class="edit-btn edit-btn-remove text-[10px]" onclick="moveToTrash(\'' + safeId + '\')">移除</button>';
+                        html += '</div></div>';
                     });
                 }
             }
@@ -1125,7 +1126,7 @@
             if (processedBookmarks.length === 0) return showToast("没有书签可导出", "warning");
             let csv = "大类,小类,网站标题,网址\n";
             processedBookmarks.forEach(bm => {
-                csv += `"${bm.cat}","${bm.sub}","${bm.title}","${bm.url}"\n`;
+                csv += '"' + bm.cat + '","' + bm.sub + '","' + bm.title + '","' + bm.url + '"\n';
             });
             const blob = new Blob(['\uFEFF' + csv], {type: 'text/csv;charset=utf-8;'});
             const a = document.createElement("a");
@@ -1198,17 +1199,12 @@
             }
             let html = '';
             deletedBookmarks.forEach(bm => {
-                html += `
-                    <div class="list-row">
-                        <div class="flex-1">
-                            <span class="text-zinc-300">${escapeHtml(bm.title)}</span>
-                            <span class="list-url">${escapeHtml(bm.url)}</span>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="edit-btn edit-btn-add" onclick="restoreFromTrash('${bm.id}')">恢复</button>
-                            <button class="edit-btn edit-btn-remove" onclick="permanentlyDelete('${bm.id}')">彻底删除</button>
-                        </div>
-                    </div>`;
+                html += '<div class="list-row">';
+                html += '<div class="flex-1"><span class="text-zinc-300">' + escapeHtml(bm.title) + '</span><span class="list-url">' + escapeHtml(bm.url) + '</span></div>';
+                html += '<div class="flex gap-2">';
+                html += '<button class="edit-btn edit-btn-add" onclick="restoreFromTrash(\'' + bm.id + '\')">恢复</button>';
+                html += '<button class="edit-btn edit-btn-remove" onclick="permanentlyDelete(\'' + bm.id + '\')">彻底删除</button>';
+                html += '</div></div>';
             });
             panel.innerHTML = html;
         }
@@ -1282,7 +1278,7 @@
             let html = '<div class="text-xs text-rose-400 mb-2">以下链接无法连接：</div>';
             deadBookmarks.forEach((db, idx) => {
                 const isHttp = db.url.startsWith('http://');
-                html += `<div class="list-row border-l-2 border-rose-500"><span class="text-zinc-600 w-6">${idx+1}</span><div class="flex-1"><div class="font-bold text-xs">${escapeHtml(db.title)}${isHttp ? ' <span class="bm-tag-http">⚠️ HTTP</span>' : ''}</div><span class="list-url text-rose-400">${escapeHtml(db.url)}</span></div><button class="edit-btn edit-btn-remove" data-url="${escapeHtml(db.url)}" onclick="deleteFromActiveBookmarks(this.dataset.url)">删除</button></div>`;
+                html += '<div class="list-row border-l-2 border-rose-500"><span class="text-zinc-600 w-6">' + (idx+1) + '</span><div class="flex-1"><div class="font-bold text-xs">' + escapeHtml(db.title) + (isHttp ? ' <span class="bm-tag-http">⚠️ HTTP</span>' : '') + '</div><span class="list-url text-rose-400">' + escapeHtml(db.url) + '</span></div><button class="edit-btn edit-btn-remove" data-url="' + escapeHtml(db.url) + '" onclick="deleteFromActiveBookmarks(this.dataset.url)">删除</button></div>';
             });
             panel.innerHTML = html;
         }
@@ -1315,8 +1311,6 @@
             });
         }
 
-        function manualRemoveFromPreviewByUid(uid) { moveToTrash(uid); }
-
         /* ========== 其他辅助函数 ========== */
         function renderStats(total, dup, cats, susp) {
             document.getElementById("statsPanel").innerHTML = `
@@ -1329,7 +1323,16 @@
         }
         function renderDuplicates() {
             const p = document.getElementById("duplicatesPanel");
-            p.innerHTML = duplicateList.length ? '<div class="scroll-y">'+duplicateList.map((d,i)=>`<div class="list-row"><span>${i+1}</span><span class="list-url">${escapeHtml(d.url)}</span></div>`).join('')+'</div>' : '<div class="empty"><p>无重复网址</p></div>';
+            if (duplicateList.length) {
+                let h = '<div class="scroll-y">';
+                duplicateList.forEach((d, i) => {
+                    h += '<div class="list-row"><span>' + (i+1) + '</span><span class="list-url">' + escapeHtml(d.url) + '</span></div>';
+                });
+                h += '</div>';
+                p.innerHTML = h;
+            } else {
+                p.innerHTML = '<div class="empty"><p>无重复网址</p></div>';
+            }
         }
         function renderCompareEmpty() { document.getElementById("comparePanel").innerHTML = '<div class="empty"><p>请上传旧备份文件以启用对比</p></div>'; document.getElementById("cmpBadge").classList.add("hidden"); }
         function toggleGroup(hd) { hd.classList.toggle("open"); hd.nextElementSibling?.classList.toggle("open"); }
