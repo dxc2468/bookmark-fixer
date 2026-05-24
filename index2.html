@@ -426,15 +426,19 @@
         }
 
         // 可疑链接面板
-        function renderSuspiciousPanel(){
-            const panel=document.getElementById("suspiciousPanel"); if(!suspiciousBookmarks.length){panel.innerHTML='<div class="empty"><p>没有待修复链接</p></div>';return;}
-            const traceable=[],untraceable=[]; suspiciousBookmarks.forEach(sb=>{ const core=cleanCoreName(sb.originalTitle); const matches=[]; if(oldBookmarkList.length&&core){ oldBookmarkList.forEach(ob=>{const s=calculateMatchScore({title:core,url:""},ob,'domain');if(s>=0.35)matches.push({title:ob.title,url:ob.url,score:s});}); matches.sort((a,b)=>b.score-a.score); } (matches.length?traceable:untraceable).push({item:sb,matches}); });
-            let h='<div class="scroll-y space-y-4">'; h+='<div class="bg-zinc-900 p-3 rounded"><h4 class="text-emerald-400 font-bold text-xs">可追溯 ('+traceable.length+')</h4>';
-            traceable.forEach(t=>{ h+='<div class="flex items-center justify-between mt-2"><input type="checkbox" name="suspiciousTraceCheckbox" data-id="'+t.item.id+'"><div class="flex-1 ml-2"><span class="text-zinc-300">'+escapeHtml(t.item.originalTitle)+'</span>'; h+='<select id="sel_url_'+t.item.id+'" class="bg-zinc-800 text-xs ml-2">'; t.matches.forEach(m=>{ h+='<option value="'+escapeHtml(m.url)+'">'+escapeHtml(m.title)+' ('+Math.round(m.score*100)+'%)</option>'; }); h+='</select></div>'; h+='<button class="edit-btn edit-btn-add" onclick="commitFixSuspiciousLink(\''+t.item.id+'\',\'select\')">修复</button></div>'; });
-            h+='</div>'; h+='<div class="bg-zinc-900 p-3 rounded"><h4 class="text-orange-400 font-bold text-xs">待手动输入 ('+untraceable.length+')</h4>';
-            untraceable.forEach(sb=>{ h+='<div class="flex items-center justify-between mt-2"><div class="flex-1"><span class="text-zinc-300">'+escapeHtml(sb.originalTitle)+'</span><input id="input_url_'+sb.id+'" class="bg-zinc-800 text-xs ml-2 w-64" placeholder="https://"></div>'; h+='<button class="edit-btn edit-btn-save" onclick="commitFixSuspiciousLink(\''+sb.id+'\',\'input\')">填入</button></div>'; });
-            h+='</div></div>'; panel.innerHTML=h; document.getElementById("suspiciousBadge").textContent=suspiciousBookmarks.length;
-        }
+       function renderSuspiciousPanel(){
+    const panel=document.getElementById("suspiciousPanel"); if(!suspiciousBookmarks.length){panel.innerHTML='<div class="empty"><p>没有待修复链接</p></div>';return;}
+    const traceable=[],untraceable=[]; suspiciousBookmarks.forEach(sb=>{ const core=cleanCoreName(sb.originalTitle); const matches=[]; if(oldBookmarkList.length&&core){ oldBookmarkList.forEach(ob=>{const s=calculateMatchScore({title:core,url:""},ob,'domain');if(s>=0.35)matches.push({title:ob.title,url:ob.url,score:s});}); matches.sort((a,b)=>b.score-a.score); } (matches.length?traceable:untraceable).push({item:sb,matches}); });
+    let h='<div class="scroll-y space-y-4">'; h+='<div class="bg-zinc-900 p-3 rounded"><h4 class="text-emerald-400 font-bold text-xs">可追溯 ('+traceable.length+')</h4>';
+    traceable.forEach(t=>{ h+='<div class="flex items-center justify-between mt-2"><input type="checkbox" name="suspiciousTraceCheckbox" data-id="'+t.item.id+'"><div class="flex-1 ml-2"><span class="text-zinc-300">'+escapeHtml(t.item.originalTitle)+'</span>'; h+='<select id="sel_url_'+t.item.id+'" class="bg-zinc-800 text-xs ml-2">'; t.matches.forEach(m=>{ h+='<option value="'+escapeHtml(m.url)+'">'+escapeHtml(m.title)+' ('+Math.round(m.score*100)+'%)</option>'; }); h+='</select></div>'; h+='<button class="edit-btn edit-btn-add" onclick="commitFixSuspiciousLink(\''+t.item.id+'\',\'select\')">修复</button></div>'; });
+    h+='</div>'; h+='<div class="bg-zinc-900 p-3 rounded"><h4 class="text-orange-400 font-bold text-xs">待手动输入 ('+untraceable.length+')</h4>';
+    untraceable.forEach(sb=>{ 
+        const item = sb.item;
+        h+='<div class="flex items-center justify-between mt-2"><div class="flex-1"><span class="text-zinc-300">'+escapeHtml(item.originalTitle)+'</span><input id="input_url_'+item.id+'" class="bg-zinc-800 text-xs ml-2 w-64" placeholder="https://"></div>'; 
+        h+='<button class="edit-btn edit-btn-save" onclick="commitFixSuspiciousLink(\''+item.id+'\',\'input\')">填入</button></div>'; 
+    });
+    h+='</div></div>'; panel.innerHTML=h; document.getElementById("suspiciousBadge").textContent=suspiciousBookmarks.length;
+    }
         function executeBatchSuspiciousLookup(){renderSuspiciousPanel();showToast("已刷新匹配");}
         function executeBatchAutoFixSuspicious(){
             const cbs=document.querySelectorAll('input[name="suspiciousTraceCheckbox"]:checked'); if(!cbs.length)return showToast("请勾选","warning"); let fixed=0;
