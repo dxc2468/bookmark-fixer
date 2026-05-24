@@ -492,7 +492,10 @@
     html += '<button class="edit-btn edit-btn-save py-1.5 px-3" onclick="openAllDeadlinks()"><i class="fas fa-external-link-alt"></i> 一键打开全部</button>';
     html += '<button class="edit-btn edit-btn-remove py-1.5 px-3" onclick="batchDeleteDeadlinks()"><i class="fas fa-trash-can"></i> 批量删除选中</button>';
     html += '</div>';
-    html += '</div>';
+    html += '</div>';  // 操作栏结束
+
+    // 插入提示
+    html += '<p class="text-zinc-500 text-xs mt-2 mb-2">💡 打开多个链接时，若浏览器阻止弹窗，请点击地址栏右侧的拦截图标并选择“始终允许”</p>';
 
     // 列表项
     html += '<div class="text-xs text-rose-400 mb-2">以下链接无法连接：</div>';
